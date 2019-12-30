@@ -84,3 +84,14 @@ def calc_DM_at_maxSNR(ds,freqs_GHz,trial_DMs,ref_freq,freq_low,t_resol,start_tim
     SNR = signal_array/offpulse_std_value
     return SNR, signal_array, offpulse_std_value
 ##########################################################################
+# Fuction to calculate block length (samples) given total number of time samples (T), no. of blocks (N) and dispersive time samples (t_DM)
+'''
+Inputs:
+tot_time_samples = No. of time samples in time series
+N_blocks = No. of blocks in which data are to be loaded
+max_tDM_samples = Max. no. of time samples covered by dispersive sweep across the observing band
+'''
+def calc_block_length(tot_time_samples,N_blocks,max_tDM_samples):
+    block_length = np.ceil((tot_time_samples+(N_blocks-1)*max_tDM_samples)/N_blocks).astype(int)
+    return block_length
+##########################################################################

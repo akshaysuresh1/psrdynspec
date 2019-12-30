@@ -16,7 +16,7 @@ hdr_size = Header size (bytes)
 pol = List of polarization indices to extract (default = [0])
 current_cursor_position = Current position of the file cursor (default = 0)
 '''
-def load_fil_data(fil_file,DATA_DIR,t_start,t_stop,pol,n_ifs,nchans,n_bytes,f,hdr_size,pol=[0],current_cursor_position=0):
+def load_fil_data(fil_file,DATA_DIR,t_start,t_stop,n_ifs,nchans,n_bytes,f,hdr_size,pol=[0],current_cursor_position=0):
     datatype = setup_dtype(n_bytes)
     N_t_samples = int(t_stop-t_start)
     start_position = int(t_start*n_ifs*nchans*n_bytes)+hdr_size # Position where file cursor must be placed before reading.
