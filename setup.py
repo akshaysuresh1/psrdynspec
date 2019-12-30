@@ -8,6 +8,7 @@ __version__ = '1.0.0'
 install_requires = [
         'matplotlib>3.0;python_version>"3.7"',
         'astropy>3.2;python_version>"3.7"',
+        'blimpy==1.4.2',
         'numpy',
         'scipy',
         'pandas'
