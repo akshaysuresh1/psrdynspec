@@ -27,7 +27,7 @@ def plot_ds(ds,t_start,t_stop,freq_low,freq_high,time_unit,freq_unit,flux_unit,b
     if (vmax==None):
         vmax = np.nanmax(ds)
     print('Plotting dynamic spectrum...')
-    if (log_colorbar==True):
+    if (log_colorbar==False):
         plt.imshow(ds,interpolation='nearest',origin='lower',aspect='auto',extent=[t_start,t_stop,freq_low,freq_high],cmap='Greys',vmin=vmin,vmax=vmax)
     else:
         plt.imshow(ds,interpolation='nearest',origin='lower',aspect='auto',extent=[t_start,t_stop,freq_low,freq_high],cmap='Greys',norm=LogNorm(vmin=vmin,vmax=vmax))
