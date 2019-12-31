@@ -1,7 +1,6 @@
 from .config import *
 from matplotlib.colors import LogNorm
 import matplotlib.gridspec as gridspec
-from matplotlib.colors import LogNorm
 
 # Plots saved to disk by default. Plots displayed on live window only if show_plot==True.
 ##########################################################################
