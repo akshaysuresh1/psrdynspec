@@ -141,7 +141,6 @@ def blockavg_axis2(data,R):
     ax2_length = shape[1]
     # If ax2_length is not divisible by the length  R, pad the array with NaNs to a size divisible by R.
     pad_size = int(np.ceil(float(ax2_length)/R)*R - float(ax2_length))
-    print(pad_size)
     pad_array = np.zeros((ax1_length,pad_size))*np.NaN
     # Pad the data with pad_array.
     padded_data = np.concatenate((data,pad_array),axis=1)
