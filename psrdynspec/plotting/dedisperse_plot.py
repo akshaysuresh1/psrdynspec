@@ -179,9 +179,22 @@ def plot_dedispersed_ds(dedisp_ds,dedisp_timeseries,dedisp_times,freqs_array,t_c
     high_freq_limit = np.max(freqs_array)
     plot_name = basename+'_t'+'%.3f'% (t_cand)+'_dedispDS_DM_'+'%.1f'% (DM)+'_freqs'+'%.2f'% (low_freq_limit)+'to'+'%.2f'% (high_freq_limit)+'.png'
     if (vmin==None):
-        vmin = np.nanmin(dedisp_ds)
+        vmin = np.nanmin(ds)
+    elif ('median -' in vmin and 'sigma' in vmin):
+        N = float(vmin.split('median -')[1].split('sigma')[0])
+        vmin = np.median(ds) - N*np.std(ds)
+    elif ('mean -' in vmin and 'sigma' in vmin):
+        N = float(vmin.split('mean -')[1].split('sigma')[0])
+        vmin = np.mean(ds) - N*np.std(ds)
+
     if (vmax==None):
-        vmax = np.nanmax(dedisp_ds)
+        vmax = np.nanmax(ds)
+    elif ('median +' in vmin and 'sigma' in vmin):
+        N = float(vmin.split('median +')[1].split('sigma')[0])
+        vmin = np.median(ds) + N*np.std(ds)
+    elif ('mean +' in vmin and 'sigma' in vmin):
+        N = float(vmin.split('mean +')[1].split('sigma')[0])
+        vmin = np.mean(ds) + N*np.std(ds)
 
     print('Plotting dedispersed time series')
     ds_ext = [dedisp_times[0],dedisp_times[-1],freqs_array[0],freqs_array[-1]]
