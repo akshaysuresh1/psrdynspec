@@ -1,7 +1,6 @@
 from .config import *
 from matplotlib.colors import LogNorm
 import matplotlib.gridspec as gridspec
-from matplotlib.colors import LogNorm
 
 # Plots saved to disk by default. Plots displayed on live window only if show_plot==True.
 ##########################################################################
@@ -164,7 +163,6 @@ freqs_array = 1D array of frequencies (GHz) covered in dedisp_ds
 t_cand = Time (s) of occurrence of candidate
 t_resol  = Time resolution (s) of data
 DM = Dispersion measure at which data were dedispersed
-offpulse_std_value = Off-pulse standard deviation to normalize the dedispersed time series
 time_unit = Unit of time (usually s) for plotting
 freq_unit = Unit of radio frequency (usually GHz) for plotting
 flux_unit = Unit of flux density
@@ -175,22 +173,34 @@ vmin = Min. color bar axis value for flux density (default = np.nanmin(ds))
 vmax = Max color bar axis value for flux density (default = np.nanmax(ds))
 log_colorbar = Do you want a log-spaced colorbar? (True/False) (default = False)
 '''
-def plot_dedispersed_ds(dedisp_ds,dedisp_timeseries,dedisp_times,freqs_array,t_cand,t_resol,DM,offpulse_std_value,time_unit,freq_unit,flux_unit,basename,SAVE_DIR,show_plot=False,vmin=None,vmax=None,log_colorbar=False):
+def plot_dedispersed_ds(dedisp_ds,dedisp_timeseries,dedisp_times,freqs_array,t_cand,t_resol,DM,time_unit,freq_unit,flux_unit,basename,SAVE_DIR,show_plot=False,vmin=None,vmax=None,log_colorbar=False):
     # Specify plot name.
     low_freq_limit = np.min(freqs_array)
     high_freq_limit = np.max(freqs_array)
     plot_name = basename+'_t'+'%.3f'% (t_cand)+'_dedispDS_DM_'+'%.1f'% (DM)+'_freqs'+'%.2f'% (low_freq_limit)+'to'+'%.2f'% (high_freq_limit)+'.png'
     if (vmin==None):
         vmin = np.nanmin(dedisp_ds)
+    elif ('median-' in vmin and 'sigma' in vmin):
+        N = float(vmin.split('median-')[1].split('sigma')[0])
+        vmin = np.median(dedisp_ds) - N*np.std(dedisp_ds)
+    elif ('mean-' in vmin and 'sigma' in vmin):
+        N = float(vmin.split('mean-')[1].split('sigma')[0])
+        vmin = np.mean(dedisp_ds) - N*np.std(dedisp_ds)
+
     if (vmax==None):
         vmax = np.nanmax(dedisp_ds)
+    elif ('median+' in vmax and 'sigma' in vmax):
+        N = float(vmax.split('median+')[1].split('sigma')[0])
+        vmax = np.median(dedisp_ds) + N*np.std(dedisp_ds)
+    elif ('mean+' in vmax and 'sigma' in vmax):
+        N = float(vmax.split('mean+')[1].split('sigma')[0])
+        vmax = np.mean(dedisp_ds) + N*np.std(dedisp_ds)
 
     print('Plotting dedispersed time series')
-    dedisp_timeseries = dedisp_timeseries/offpulse_std_value # Convert dedispersed time series to S/N units.
     ds_ext = [dedisp_times[0],dedisp_times[-1],freqs_array[0],freqs_array[-1]]
     fig,axes = plt.subplots(nrows=2,ncols=1,sharex=True,gridspec_kw={'height_ratios': [1, 2]})
     axes[0].plot(dedisp_times,dedisp_timeseries)
-    axes[0].set_ylabel('S/N',fontsize=14)
+    axes[0].set_ylabel('Flux (%s)'% (flux_unit),fontsize=14)
 
     print('Plotting dedispersed dynamic spectrum')
     if (log_colorbar==False):

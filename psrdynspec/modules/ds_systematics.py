@@ -61,7 +61,7 @@ raw_ds = Input dynamic spectrum, 2D array, axes = [Frequency, Time]
 def calc_median_bandpass(raw_ds):
     bandpass = np.zeros(len(raw_ds))
     for i in range(len(bandpass)):
-        bandpass[i] = np.median(raw_ds[i])
+        bandpass[i] = np.nanmedian(raw_ds[i])
     print('Median bandpass shape calculated.')
     return bandpass
 ############################################################################

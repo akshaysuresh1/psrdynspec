@@ -39,6 +39,7 @@ true_values = ['True', 'true', 'TRUE', 'T', 't']
 false_values = ['False', 'false', 'FALSE', 'F', 'f']
 
 config = configparser.SafeConfigParser(dict_type=OrderedDict, allow_no_value=True)
+config.optionxform = str
 ##########################################################
 def print_config(config):
     for x in config.sections():
