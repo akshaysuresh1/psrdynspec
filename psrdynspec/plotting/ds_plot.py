@@ -35,7 +35,7 @@ def plot_ds(ds,t_start,t_stop,freq_low,freq_high,time_unit,freq_unit,flux_unit,b
     if (vmax==None):
         vmax = np.nanmax(ds)
     elif ifinstance(vmax,str):
-        elif ('median+' in vmax and 'sigma' in vmax):
+        if ('median+' in vmax and 'sigma' in vmax):
             N = float(vmax.split('median+')[1].split('sigma')[0])
             vmax = np.median(ds) + N*np.std(ds)
         elif ('mean+' in vmax and 'sigma' in vmax):
