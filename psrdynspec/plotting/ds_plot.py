@@ -24,7 +24,7 @@ def plot_ds(ds,t_start,t_stop,freq_low,freq_high,time_unit,freq_unit,flux_unit,b
     plot_name = basename+'_t'+'%.3fto%.3f'% (t_start,t_stop)+'_freqs%.2fto%.2f'% (freq_low,freq_high)+'.png'
     if (vmin==None):
         vmin = np.nanmin(ds)
-    elif ifinstance(vmin,str):
+    elif isinstance(vmin, str):
         if ('median-' in vmin and 'sigma' in vmin):
             N = float(vmin.split('median-')[1].split('sigma')[0])
             vmin = np.median(ds) - N*np.std(ds)
@@ -34,7 +34,7 @@ def plot_ds(ds,t_start,t_stop,freq_low,freq_high,time_unit,freq_unit,flux_unit,b
 
     if (vmax==None):
         vmax = np.nanmax(ds)
-    elif ifinstance(vmax,str):
+    elif isinstance(vmax, str):
         if ('median+' in vmax and 'sigma' in vmax):
             N = float(vmax.split('median+')[1].split('sigma')[0])
             vmax = np.median(ds) + N*np.std(ds)
