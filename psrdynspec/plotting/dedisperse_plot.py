@@ -42,16 +42,18 @@ trial_DMs = 1D array of trial DMs at which dedispersion must be performed
 SNR = 1D array of signal-to-noise ratios at above trial DMs
 optimal_DM = DM that maximized S/N
 offpulse_std_value = Off-pulse standard deviation to normalize the dedispersed time series.
-time_unit = Unit of time (usually s) for plotting
 freq_unit = Unit of radio frequency (usually GHz) for plotting
+time_offset_unit = Unit of time (usually s) for plotting
 basename = Basename (string) for output plot
 SAVE_DIR = Path to which plot muse be saved
 show_plot = Do you want to show the plot live? (True/False) (default = False)
 '''
-def plot_dedisp_subband_SNRvsDM(dedisp_ds,dedisp_timeseries,dedisp_times,freqs_array,t_cand,t_resol,trial_DMs,SNR,optimal_DM,offpulse_std_value,time_unit,freq_unit,basename,SAVE_DIR,show_plot=False):
+def plot_dedisp_subband_SNRvsDM(dedisp_ds,dedisp_timeseries,dedisp_times,freqs_array,t_cand,t_resol,trial_DMs,SNR,optimal_DM,offpulse_std_value,freq_unit='GHz',time_offset_unit='s',timeoffset_conversion_factor=1.0,basename='',SAVE_DIR='',show_plot=False):
     low_freq_limit = np.min(freqs_array)
     high_freq_limit = np.max(freqs_array)
     plot_name = basename+'_t'+'%.3f'% (t_cand)+'_dedispDS_SNRvsDM_freqs'+'%.2f'% (low_freq_limit)+'to'+'%.2f'% (high_freq_limit)+'.png'
+    # Apply unit conversion factor along time axis.
+    dedisp_times *= timeoffset_conversion_factor
     # Construct the gridspec framework for figure.
     fig = plt.figure(figsize=(6,8))
     #make outer gridspec
@@ -82,7 +84,7 @@ def plot_dedisp_subband_SNRvsDM(dedisp_ds,dedisp_timeseries,dedisp_times,freqs_a
     print('Plotting dedispersed dynamic spectrum')
     ds_ext = [dedisp_time_offset[0],dedisp_time_offset[-1],freqs_array[0],freqs_array[-1]]
     ax3.imshow(dedisp_ds,origin='lower',interpolation='nearest',aspect='auto',extent=ds_ext)
-    ax3.set_xlabel('Time offset ('+time_unit+')',fontsize=14)
+    ax3.set_xlabel('Time offset ('+time_offset_unit+')',fontsize=14)
     ax3.set_ylabel('Radio frequency ('+freq_unit+')',fontsize=14)
     ax3.set_xlim(dedisp_time_offset[0],dedisp_time_offset[-1])
     plt.savefig(SAVE_DIR+plot_name)
@@ -104,17 +106,19 @@ trial_DMs = 1D array of trial DMs at which dedispersion must be performed
 SNR = 1D array of signal-to-noise ratios at above trial DMs
 optimal_DM = DM that maximized S/N
 offpulse_std_value = Off-pulse standard deviation to normalize the dedispersed time series
-time_unit = Unit of time (usually s) for plotting
 freq_unit = Unit of radio frequency (usually GHz) for plotting
+time_offset_unit = Unit of time (usually s) for plotting
 basename = Basename (string) for output plot
 SAVE_DIR = Path to which plot muse be saved
 show_plot = Do you want to show the plot live? (True/False) (default = False)
 '''
-def plot_dedisp_ds_SNRvsDM(dedisp_ds,dedisp_timeseries,dedisp_times,freqs_array,t_cand,t_before,t_resol,trial_DMs,SNR,optimal_DM,offpulse_std_value,time_unit,freq_unit,basename,SAVE_DIR,show_plot=False):
+def plot_dedisp_ds_SNRvsDM(dedisp_ds,dedisp_timeseries,dedisp_times,freqs_array,t_cand,t_before,t_resol,trial_DMs,SNR,optimal_DM,offpulse_std_value,freq_unit='GHz',time_offset_unit='s',timeoffset_conversion_factor=1.0,basename='',SAVE_DIR='',show_plot=False):
     # Specify plot name.
     low_freq_limit = np.min(freqs_array)
     high_freq_limit = np.max(freqs_array)
     plot_name = basename+'_t'+'%.3f'% (t_cand)+'_dedispDS_SNRvsDM_freqs'+'%.2f'% (low_freq_limit)+'to'+'%.2f'% (high_freq_limit)+'.png'
+    # Apply unit conversion factor along time axis.
+    dedisp_times *= timeoffset_conversion_factor
     # Construct the gridspec framework for figure.
     fig = plt.figure(figsize=(6,10))
     #make outer gridspec
@@ -144,7 +148,7 @@ def plot_dedisp_ds_SNRvsDM(dedisp_ds,dedisp_timeseries,dedisp_times,freqs_array,
     print('Plotting dedispersed dynamic spectrum')
     ds_ext = [dedisp_time_offset[0],dedisp_time_offset[-1],freqs_array[0],freqs_array[-1]]
     ax3.imshow(dedisp_ds,origin='lower',interpolation='nearest',aspect='auto',extent=ds_ext)
-    ax3.set_xlabel('Time offset ('+time_unit+')',fontsize=14)
+    ax3.set_xlabel('Time offset ('+time_offset_unit+')',fontsize=14)
     ax3.set_ylabel('Radio frequency ('+freq_unit+')',fontsize=14)
     ax3.set_xlim(dedisp_time_offset[0],dedisp_time_offset[-1])
     plt.savefig(SAVE_DIR+plot_name)
