@@ -53,7 +53,7 @@ def plot_dedisp_subband_SNRvsDM(dedisp_ds,dedisp_timeseries,dedisp_times,freqs_a
     high_freq_limit = np.max(freqs_array)
     plot_name = basename+'_t'+'%.3f'% (t_cand)+'_dedispDS_SNRvsDM_freqs'+'%.2f'% (low_freq_limit)+'to'+'%.2f'% (high_freq_limit)+'.png'
     # Apply unit conversion factor along time axis.
-    dedisp_times *= timeoffset_conversion_factor
+    dedisp_times = dedisp_times*timeoffset_conversion_factor
     # Construct the gridspec framework for figure.
     fig = plt.figure(figsize=(6,8))
     #make outer gridspec
@@ -118,7 +118,7 @@ def plot_dedisp_ds_SNRvsDM(dedisp_ds,dedisp_timeseries,dedisp_times,freqs_array,
     high_freq_limit = np.max(freqs_array)
     plot_name = basename+'_t'+'%.3f'% (t_cand)+'_dedispDS_SNRvsDM_freqs'+'%.2f'% (low_freq_limit)+'to'+'%.2f'% (high_freq_limit)+'.png'
     # Apply unit conversion factor along time axis.
-    dedisp_times *= timeoffset_conversion_factor
+    dedisp_times = dedisp_times*timeoffset_conversion_factor
     # Construct the gridspec framework for figure.
     fig = plt.figure(figsize=(6,10))
     #make outer gridspec
