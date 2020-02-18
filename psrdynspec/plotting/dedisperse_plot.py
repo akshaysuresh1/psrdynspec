@@ -108,8 +108,10 @@ trial_DMs = 1D array of trial DMs at which dedispersion must be performed
 SNR = 1D array of signal-to-noise ratios at above trial DMs
 optimal_DM = DM that maximized S/N
 offpulse_std_value = Off-pulse standard deviation to normalize the dedispersed time series
+flux_unit = Unit of flux density
 freq_unit = Unit of radio frequency (usually GHz) for plotting
 time_offset_unit = Unit of time (usually s) for plotting
+timeoffset_conversion_factor = Conversion factor (float) from time units to time offset units. For example, s -> ms x 1.e3
 basename = Basename (string) for output plot
 SAVE_DIR = Path to which plot muse be saved
 show_plot = Do you want to show the plot live? (True/False) (default = False)
@@ -117,7 +119,7 @@ vmin = Min. color bar axis value for flux density (default = np.nanmin(whole_ds)
 vmax = Max color bar axis value for flux density (default = np.nanmax(whole_ds))
 log_colorbar = Do you want a log-spaced colorbar? (True/False) (default = False)
 '''
-def plot_dedisp_ds_SNRvsDM(whole_ds,times,dedisp_ds,dedisp_timeseries,dedisp_times,freqs_array,t_cand,t_before,t_resol,trial_DMs,SNR,optimal_DM,offpulse_std_value,freq_unit='GHz',time_offset_unit='s',timeoffset_conversion_factor=1.0,basename='',SAVE_DIR='',show_plot=False,vmin=None,vmax=None,log_colorbar=False):
+def plot_dedisp_ds_SNRvsDM(whole_ds,times,dedisp_ds,dedisp_timeseries,dedisp_times,freqs_array,t_cand,t_before,t_resol,trial_DMs,SNR,optimal_DM,offpulse_std_value,flux_unit,freq_unit='GHz',time_offset_unit='s',timeoffset_conversion_factor=1.0,basename='',SAVE_DIR='',show_plot=False,vmin=None,vmax=None,log_colorbar=False):
     # Specify plot name.
     low_freq_limit = np.min(freqs_array)
     high_freq_limit = np.max(freqs_array)
