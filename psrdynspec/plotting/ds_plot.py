@@ -22,25 +22,25 @@ log_colorbar = Do you want a log-spaced colorbar? (True/False) (default = False)
 '''
 def plot_ds(ds,t_start,t_stop,freq_low,freq_high,time_unit,freq_unit,flux_unit,basename,SAVE_DIR,show_plot=False,vmin=None,vmax=None,log_colorbar=False):
     plot_name = basename+'_t'+'%.3fto%.3f'% (t_start,t_stop)+'_freqs%.2fto%.2f'% (freq_low,freq_high)+'.png'
-    if (vmin==None):
+    if (vmin is None):
         vmin = np.nanmin(ds)
     elif isinstance(vmin, str):
         if ('median-' in vmin and 'sigma' in vmin):
             N = float(vmin.split('median-')[1].split('sigma')[0])
-            vmin = np.median(ds) - N*np.std(ds)
+            vmin = np.nanmedian(ds) - N*np.nanstd(ds)
         elif ('mean-' in vmin and 'sigma' in vmin):
             N = float(vmin.split('mean-')[1].split('sigma')[0])
-            vmin = np.mean(ds) - N*np.std(ds)
+            vmin = np.nanmean(ds) - N*np.nanstd(ds)
 
-    if (vmax==None):
+    if (vmax is None):
         vmax = np.nanmax(ds)
     elif isinstance(vmax, str):
         if ('median+' in vmax and 'sigma' in vmax):
             N = float(vmax.split('median+')[1].split('sigma')[0])
-            vmax = np.median(ds) + N*np.std(ds)
+            vmax = np.nanmedian(ds) + N*np.nanstd(ds)
         elif ('mean+' in vmax and 'sigma' in vmax):
             N = float(vmax.split('mean+')[1].split('sigma')[0])
-            vmax = np.mean(ds) + N*np.std(ds)
+            vmax = np.nanmean(ds) + N*np.nanstd(ds)
 
     print('Plotting dynamic spectrum...')
     if (log_colorbar==False):

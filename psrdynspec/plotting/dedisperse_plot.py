@@ -241,23 +241,25 @@ def plot_dedispersed_ds(dedisp_ds,dedisp_timeseries,dedisp_times,freqs_array,t_c
     low_freq_limit = np.min(freqs_array)
     high_freq_limit = np.max(freqs_array)
     plot_name = basename+'_t'+'%.3f'% (t_cand)+'_dedispDS_DM_'+'%.1f'% (DM)+'_freqs'+'%.2f'% (low_freq_limit)+'to'+'%.2f'% (high_freq_limit)+'.png'
-    if (vmin==None):
+    if (vmin is None):
         vmin = np.nanmin(dedisp_ds)
-    elif ('median-' in vmin and 'sigma' in vmin):
-        N = float(vmin.split('median-')[1].split('sigma')[0])
-        vmin = np.median(dedisp_ds) - N*np.std(dedisp_ds)
-    elif ('mean-' in vmin and 'sigma' in vmin):
-        N = float(vmin.split('mean-')[1].split('sigma')[0])
-        vmin = np.mean(dedisp_ds) - N*np.std(dedisp_ds)
+    elif isinstance(vmin, str):
+        if ('median-' in vmin and 'sigma' in vmin):
+            N = float(vmin.split('median-')[1].split('sigma')[0])
+            vmin = np.nanmedian(dedisp_ds) - N*np.nanstd(dedisp_ds)
+        elif ('mean-' in vmin and 'sigma' in vmin):
+            N = float(vmin.split('mean-')[1].split('sigma')[0])
+            vmin = np.nanmean(dedisp_ds) - N*np.nanstd(dedisp_ds)
 
-    if (vmax==None):
+    if (vmax is None):
         vmax = np.nanmax(dedisp_ds)
-    elif ('median+' in vmax and 'sigma' in vmax):
-        N = float(vmax.split('median+')[1].split('sigma')[0])
-        vmax = np.median(dedisp_ds) + N*np.std(dedisp_ds)
-    elif ('mean+' in vmax and 'sigma' in vmax):
-        N = float(vmax.split('mean+')[1].split('sigma')[0])
-        vmax = np.mean(dedisp_ds) + N*np.std(dedisp_ds)
+    elif isinstance(vmax, str):
+        if ('median+' in vmax and 'sigma' in vmax):
+            N = float(vmax.split('median+')[1].split('sigma')[0])
+            vmax = np.nanmedian(dedisp_ds) + N*np.nanstd(dedisp_ds)
+        elif ('mean+' in vmax and 'sigma' in vmax):
+            N = float(vmax.split('mean+')[1].split('sigma')[0])
+            vmax = np.nanmean(dedisp_ds) + N*np.nanstd(dedisp_ds)
 
     print('Plotting dedispersed time series')
     ds_ext = [dedisp_times[0],dedisp_times[-1],freqs_array[0],freqs_array[-1]]
