@@ -69,7 +69,7 @@ def calc_DM_at_maxSNR(ds,freqs_GHz,trial_DMs,ref_freq,freq_low,t_resol,start_tim
     for i in range(len(trial_DMs)):
         DM = trial_DMs[i]
         if (DM%2==0):
-            print('Dedispersing at DM = %s'% (DM))
+            print('Dedispersing at DM = %s pc/cc'% (DM))
         dedisp_ds, dedisp_times,dedisp_timeseries = dedisperse_ds(ds,freqs_GHz,DM,ref_freq,freq_low,t_resol,start_time)
         signal = np.max(dedisp_timeseries) # Signal
         max_index = np.argmax(dedisp_timeseries) # Index corresponding to pulse maximum

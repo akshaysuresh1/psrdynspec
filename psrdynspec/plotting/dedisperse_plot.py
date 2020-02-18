@@ -197,7 +197,7 @@ def plot_dedisp_ds_SNRvsDM(whole_ds,times,dedisp_ds,dedisp_timeseries,dedisp_tim
     else:
         ax4.imshow(whole_ds,origin='lower',interpolation='nearest',aspect='auto',extent=ds_ext,norm=LogNorm(vmin=vmin,vmax=vmax))
     ax4.set_ylabel('Radio frequency ('+freq_unit+')',fontsize=16)
-    ax4.set_xlabel('Time offset ('+time_offset_unit+') referenced to %.2f GHz'% (freqs_ds[-1]),fontsize=16)
+    ax4.set_xlabel('Time offset ('+time_offset_unit+') referenced to %.2f GHz'% (freqs_array[-1]),fontsize=16)
     ax4.set_xlim(times_offset[0],times_offset[-1])
 
     # Create space for colorbar on right side of plot.
