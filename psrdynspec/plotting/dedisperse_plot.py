@@ -134,7 +134,7 @@ def plot_dedisp_ds_SNRvsDM(whole_ds,times,dedisp_ds,dedisp_timeseries,dedisp_tim
             vmin = np.nanmean(whole_ds) - N*np.nanstd(whole_ds)
 
     if (vmax is None):
-        vmax = np.nanmax(ds)
+        vmax = np.nanmax(whole_ds)
     elif isinstance(vmax, str):
         if ('median+' in vmax and 'sigma' in vmax):
             N = float(vmax.split('median+')[1].split('sigma')[0])
