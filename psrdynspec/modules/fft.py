@@ -15,6 +15,10 @@ remove_DC_spike = True/False
 def fft1d_blocks_avg(data_1d,Nfft,t_resol,remove_DC_spike=False):
     N_samples = np.size(data_1d)
     print('Total number of samples in the data = ',N_samples)
+    if (N_samples<Nfft):
+        print('Input array size < FFT length')
+        print('Padding input array with median values to the specified FFT length')
+        data_1d = np.append(data_1d, np.ones(Nfft-N_samples)*np.nanmedian(data_1d))
     # Total number of independent blocks to FFT
     Nblocks_max = N_samples//Nfft
     print('Total number of blocks to FFT = ',Nblocks_max)
