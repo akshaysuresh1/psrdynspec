@@ -110,3 +110,15 @@ def calc_reduced_chiquare_profile(profile):
     reduced_chisquare = np.mean((profile-med)**2)/(std_offpulse**2)
     return reduced_chisquare
 ###########################################################################
+# Assign plotting labels to different metrics.
+'''
+Inputs:
+metric = Metric to maximize for determining optimal folding period
+'''
+def assign_metlabel(metric):
+    if metric=='profmax':
+        label = 'Profile maximum'
+    elif metric=='reduced chi square':
+        label = r'$\chi_{\mathrm{r}}^2$'
+    return label
+###########################################################################
