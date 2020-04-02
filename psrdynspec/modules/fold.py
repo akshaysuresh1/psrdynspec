@@ -74,7 +74,7 @@ def fold_metric_periods(timeseries,times,periods,Nbins,metric):
     if (metric=='profmax'):
         metric_function = calc_profilemax
     elif (metric=='reduced chi square'):
-        metric_function = calc_reduced_chiquare_profile
+        metric_function = calc_reduced_chisquare_profile
     print('Folding data at a large number of trial periods...')
     print('Metric: ',metric)
     print('Index      Period (s)       Metric value')
@@ -103,7 +103,7 @@ def calc_profilemax(profile):
 Inputs:
 profile = Folded pulse profile
 '''
-def calc_reduced_chiquare_profile(profile):
+def calc_reduced_chisquare_profile(profile):
     med = np.median(profile)
     profile_without_outliers = np.ma.masked_outside(profile,med-3*np.std(profile),med+3*np.std(profile))
     std_offpulse = np.std(profile_without_outliers)
