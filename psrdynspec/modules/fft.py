@@ -69,31 +69,14 @@ def find_FFTpeaks(frequencies,power_spectrum,search_scale='log',niter=5,Nsigma=3
         mask_array = power_spectrum
     else:
         return "Search scale not defined. Choose either 'linear' or 'log'."
-    median = np.median(mask_array)
-    std = np.std(mask_array)
     print('Iteratively masking elements within 3 sigma of median in %s scale'% (search_scale))
     mask_array = sigma_clip(mask_array,sigma=Nsigma,cenfunc='median',stdfunc='std',maxiters=niter)
     if search_scale=='log':
-        median = np.exp(np.median(mask_array))
+        median = np.exp(np.ma.median(mask_array))
         std = np.exp(np.std(mask_array))
     elif search_scale=='linear':
-        median = np.median(mask_array)
-        std = np.std(mask_array) 
-    '''
-    for i in range(niter):
-      mask_array = np.ma.masked_outside(mask_array,median-sigma_clip*std,median+sigma_clip*std)
-      median = np.ma.median(mask_array)
-      std_new = np.std(mask_array)
-      std_diff_percent = np.abs(std - std_new)*100/std_new # Percentage change in standard deviation between iterations.
-      if (std_diff_percent<=0.1):
-          print('Convergence criterion achieved at iteration %d'% (i+1))
-          break
-      elif (i==niter-1):
-          print('Max iterations limit reached.')
-    if search_scale=='log':
-        median = np.exp(median)
-        std = np.exp(std)
-    '''
+        median = np.ma.median(mask_array)
+        std = np.std(mask_array)
     peak_indices, _ = find_peaks(power_spectrum,height=median+5*std)
     peak_freqs = frequencies[peak_indices]
     peak_powerspec = power_spectrum[peak_indices]

@@ -3,7 +3,7 @@ Python 3 tools for processing dynamic spectra of radio transients
 
 ## Dependencies
 ```psrdynspec``` is written in Python 3, tested on Python 3.7.4 and has the following package dependencies.
-- astropy > 3.2
+- astropy > 4.0
 - blimpy = 1.4.2
 - matplotlib > 3.0
 - numpy
