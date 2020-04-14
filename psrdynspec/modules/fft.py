@@ -84,7 +84,7 @@ def find_FFTpeaks(frequencies,power_spectrum,search_scale='log',niter=5,sigma_cl
     if search_scale=='log':
         median = np.exp(median)
         std = np.exp(std)
-    peak_indices, _ = find_peaks(power_spectrum,height=median+5*std,prominence=5*std)
+    peak_indices, _ = find_peaks(power_spectrum,height=median+5*std)
     peak_freqs = frequencies[peak_indices]
     peak_powerspec = power_spectrum[peak_indices]
     return peak_indices, peak_freqs, peak_powerspec
