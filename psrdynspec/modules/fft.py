@@ -2,6 +2,7 @@
 
 import numpy as np
 from scipy.signal import find_peaks
+from astropy.stats import sigma_clip
 #############################################################
 # Perform |FFT|^2 of 1D data blocks of length Nfft and average them to obtain power spectrum.
 # For a single N-point transform, set Nfft = np.size(data_1d).
@@ -59,9 +60,9 @@ frequencies = 1D array of Fourier frequency values (Hz)
 power_spectrum = 1D array of power_spectrum values
 search_scale = 'linear' or 'log' (d: log)
 niter = No. of iterations (integer) to perform for iterative sigma clipping (d: 5)
-sigma_clip = No. of standard deviations outside of median to be clipped (d: 3.0)
+Nsigma = No. of standard deviations outside of median to be clipped (d: 3.0)
 '''
-def find_FFTpeaks(frequencies,power_spectrum,search_scale='log',niter=5,sigma_clip=3.0):
+def find_FFTpeaks(frequencies,power_spectrum,search_scale='log',niter=5,Nsigma=3.0):
     if search_scale=='log':
         mask_array = np.log(power_spectrum)
     elif search_scale=='linear':
@@ -71,9 +72,17 @@ def find_FFTpeaks(frequencies,power_spectrum,search_scale='log',niter=5,sigma_cl
     median = np.median(mask_array)
     std = np.std(mask_array)
     print('Iteratively masking elements within 3 sigma of median in %s scale'% (search_scale))
+    mask_array = sigma_clip(mask_array,sigma=Nsigma,cenfunc='median',stdfunc='std',maxiters=niter)
+    if search_scale=='log':
+        median = np.exp(np.median(mask_array))
+        std = np.exp(np.std(mask_array))
+    elif search_scale=='linear':
+        median = np.median(mask_array)
+        std = np.std(mask_array) 
+    '''
     for i in range(niter):
       mask_array = np.ma.masked_outside(mask_array,median-sigma_clip*std,median+sigma_clip*std)
-      median = np.median(mask_array)
+      median = np.ma.median(mask_array)
       std_new = np.std(mask_array)
       std_diff_percent = np.abs(std - std_new)*100/std_new # Percentage change in standard deviation between iterations.
       if (std_diff_percent<=0.1):
@@ -84,6 +93,7 @@ def find_FFTpeaks(frequencies,power_spectrum,search_scale='log',niter=5,sigma_cl
     if search_scale=='log':
         median = np.exp(median)
         std = np.exp(std)
+    '''
     peak_indices, _ = find_peaks(power_spectrum,height=median+5*std)
     peak_freqs = frequencies[peak_indices]
     peak_powerspec = power_spectrum[peak_indices]
@@ -95,19 +105,18 @@ Inputs:
 data1d = 1D array of data values
 Nfft = FFT length (preferably a power of 2)
 axis_resol = Resolution along axis element of data aray. For example, time resolution if data_1d is a time series
-N_sigma = Factor N to be used for sigma clipping. If exclude_noise=True, values less than N*sigma of the median are replaced with zeros before FFT computation.
 exclude_noise = Do you want to exclude the baseline statistical noise when performing FFT? (True/False) (d: 3.0)
 search_scale = 'linear' or 'log' (d: log)
 niter = No. of iterations (integer) to perform for iterative sigma clipping (d: 5)
-sigma_clip = No. of standard deviations outside of median to be clipped (d: 3.0)
+Nsigma = Factor N to be used for sigma clipping. If exclude_noise=True, values less than N*sigma of the median are replaced with zeros before FFT computation.
 '''
-def fft1d_mask(data1d,Nfft,axis_resol,exclude_noise=False,N_sigma=3.0,search_scale='log',niter=5,sigma_clip=3.0):
+def fft1d_mask(data1d,Nfft,axis_resol,exclude_noise=False,search_scale='log',niter=5,Nsigma=3.0):
     # If specified, mask noise before computing FFT.
     if (exclude_noise==True):
         threshold = np.median(data1d)+N_sigma*np.std(data1d)
         data1d = np.ma.filled(np.ma.masked_less(data1d ,threshold),0) # Replace values below the threshold with zeros.
     # Compute FFT in blocks on length Nfft.
     power_spectrum, frequencies = fft1d_blocks_avg(data1d, Nfft, axis_resol, remove_DC_spike=True,return_positive_freqs_only=True)
-    peak_indices, peak_freqs, peak_powerspec = find_FFTpeaks(frequencies,power_spectrum,search_scale,niter,sigma_clip)
+    peak_indices, peak_freqs, peak_powerspec = find_FFTpeaks(frequencies,power_spectrum,search_scale,niter,Nsigma)
     return frequencies, power_spectrum, peak_indices, peak_freqs, peak_powerspec
 #############################################################
