@@ -78,6 +78,7 @@ def find_FFTpeaks(frequencies,power_spectrum,search_scale='log',niter=5,sigma_cl
       std_diff_percent = np.abs(std - std_new)*100/std_new # Percentage change in standard deviation between iterations.
       if (std_diff_percent<=5):
           print('Convergence criterion achieved at iteration %d'% (i+1))
+          break
       elif (i==niter-1):
           print('Max iterations limit reached.')
     if search_scale=='log':
