@@ -207,7 +207,7 @@ def plot_dedisp_ds_SNRvsDM(whole_ds,times,dedisp_ds,dedisp_timeseries,dedisp_tim
     fig.subplots_adjust(right=0.80)
     ax4_left, ax4_bottom, ax4_width, ax4_height = ax4.get_position().get_points().flatten()
     ax2_left, ax2_bottom, ax2_width, ax2_height = ax2.get_position().get_points().flatten()
-    cbar_ax = fig.add_axes([0.83, ax1_bottom, 0.03, ax2_bottom-ax4_bottom])
+    cbar_ax = fig.add_axes([0.83, ax4_bottom, 0.03, ax2_bottom-ax4_bottom])
     h = fig.colorbar(im, cax=cbar_ax)
     h.set_label('Flux density (%s)'% (flux_unit),fontsize=16)
 
