@@ -2,6 +2,7 @@
 
 # Import required packages.
 import numpy as np
+from astropy.stats import sigma_clip
 ##########################################################################
 # Calculate dispersive delay relative to a reference frequency for a given DM.
 '''
@@ -47,7 +48,7 @@ def dedisperse_ds(ds,freqs_GHz,DM,ref_freq,freq_low,t_resol,start_time):
     return dedisp_ds,dedisp_times,dedisp_timeseries
 ##########################################################################
 # Dedisperse at a large number of trial DMs and determine the DM that maximizes S/N.
-# Off-pulse RMS estimated using samples that lie outside of t_exclude seconds off the time series maximum.
+# Off-pulse RMS estimated using iterative sigma clipping.
 '''
 Inputs:
 ds = 2D array, dynamic spectrum
@@ -58,24 +59,19 @@ freq_low = Lowest frequency (GHz) for which we intend to calculate the dispersiv
 t_resol = Time resolution (s) of the data
 start_time = Start time (s) of the data
 t_center = Central time (s) reported for candidate by PRESTO
-t_exclude = No. of seconds of data around t_center should be exclude for off-pulse RMS calculation
 '''
-def calc_DM_at_maxSNR(ds,freqs_GHz,trial_DMs,ref_freq,freq_low,t_resol,start_time,t_center,t_exclude):
+def calc_DM_at_maxSNR(ds,freqs_GHz,trial_DMs,ref_freq,freq_low,t_resol,start_time,t_center):
     # Keep track of how signal and offpulse_std vary with trial DM.
     signal_array = np.zeros_like(trial_DMs)
     offpulse_std_array = np.zeros_like(trial_DMs)
     # Determine which bins to ignore when computing off-pulse standard deviation of time series.
-    t_exclude_bins = int(t_exclude//t_resol) # No. of bins to ignore on either side of pulse maximum
     for i in range(len(trial_DMs)):
         DM = trial_DMs[i]
         if (DM%2==0):
             print('Dedispersing at DM = %s pc/cc'% (DM))
         dedisp_ds, dedisp_times,dedisp_timeseries = dedisperse_ds(ds,freqs_GHz,DM,ref_freq,freq_low,t_resol,start_time)
         signal = np.max(dedisp_timeseries) # Signal
-        max_index = np.argmax(dedisp_timeseries) # Index corresponding to pulse maximum
-        low_exclude_limit = max_index - t_exclude_bins # Lowest index to ignore
-        high_exclude_limit = max_index + t_exclude_bins+1 # 1 greater than the highest index to ignore
-        offpulse_std = np.std(np.append(dedisp_timeseries[:low_exclude_limit],dedisp_timeseries[high_exclude_limit:])) # Off-pulse standard deviation
+        offpulse_std = sigma_clip(dedisp_timeseries,sigma=5.0,maxiters=5,cenfunc='median', stdfunc='std') # Off-pulse standard deviation
         signal_array[i] = signal
         offpulse_std_array[i] = offpulse_std
     # Find the DM at which S/N gets maximized.

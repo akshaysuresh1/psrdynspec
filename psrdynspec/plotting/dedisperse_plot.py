@@ -52,8 +52,6 @@ def plot_dedisp_subband_SNRvsDM(dedisp_ds,dedisp_timeseries,dedisp_times,freqs_a
     low_freq_limit = np.min(freqs_array)
     high_freq_limit = np.max(freqs_array)
     plot_name = basename+'_t'+'%.3f'% (t_cand)+'_dedispDS_SNRvsDM_freqs'+'%.2f'% (low_freq_limit)+'to'+'%.2f'% (high_freq_limit)+'.png'
-    # Apply unit conversion factor along time axis.
-    dedisp_times = dedisp_times*timeoffset_conversion_factor
     # Construct the gridspec framework for figure.
     fig = plt.figure(figsize=(6,8))
     #make outer gridspec
@@ -76,8 +74,7 @@ def plot_dedisp_subband_SNRvsDM(dedisp_ds,dedisp_timeseries,dedisp_times,freqs_a
     # Convert dedispersed time series from integrated fluxes to S/N.
     dedisp_timeseries = dedisp_timeseries/offpulse_std_value
     # Convert times to offsets relative to pulse maximum.
-    pulse_max_time = dedisp_times[np.argmax(dedisp_timeseries)]
-    dedisp_time_offset = (dedisp_times -pulse_max_time) # Dedispersed time offsets
+    dedisp_time_offset = (dedisp_times -t_cand)*timeoffset_conversion_factor # Dedispersed time offsets
     ax2.plot(dedisp_time_offset,dedisp_timeseries)
     ax2.set_ylabel('S/N',fontsize=14)
     # Plot the dedispersed dynamic spectrum in lower panel of bottom gridspec.
@@ -165,10 +162,9 @@ def plot_dedisp_ds_SNRvsDM(whole_ds,times,dedisp_ds,dedisp_timeseries,dedisp_tim
     ax2 = plt.subplot(gs2[0])
     ax3 = plt.subplot(gs2[1],sharex=ax2)
 
-    # Convert times to offsets relative to pulse maximum.
-    pulse_max_time = dedisp_times[np.argmax(dedisp_timeseries)]
-    dedisp_time_offset = (dedisp_times -pulse_max_time)*timeoffset_conversion_factor
-    times_offset = (times - pulse_max_time)*timeoffset_conversion_factor
+    # Convert times to offsets relative to candidate TOA reported by PRESTO.
+    dedisp_time_offset = (dedisp_times - t_cand)*timeoffset_conversion_factor
+    times_offset = (times - t_cand)*timeoffset_conversion_factor
 
     # Plot dedispersed time series in upper panel of bottom gridspec.
     print('Padding dedispersed data products with NaNs to the time span of the non-dedispersed dynamic spectrum')
