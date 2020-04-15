@@ -148,7 +148,7 @@ def plot_dedisp_ds_SNRvsDM(whole_ds,times,dedisp_ds,dedisp_timeseries,dedisp_tim
     # Construct the gridspec framework for figure.
     fig = plt.figure(figsize=(8,14))
     #make outer gridspec
-    outer = gridspec.GridSpec(2, 1, figure=fig,height_ratios = [1, 3])
+    outer = gridspec.GridSpec(3, 1, figure=fig,height_ratios = [1, 3, 2])
 
     # Plot S/N vs. DM in the top gridspec.
     print('Plotting S/N vs. DM')
@@ -161,10 +161,9 @@ def plot_dedisp_ds_SNRvsDM(whole_ds,times,dedisp_ds,dedisp_timeseries,dedisp_tim
     ax1.legend(loc='best',prop={'size':14})
 
     # Construct nested gridspec within the bottom panel of outer gridspec.
-    gs2 = gridspec.GridSpecFromSubplotSpec(3, 1, subplot_spec = outer[1], height_ratios = [1, 3, 3],hspace = 0)
+    gs2 = gridspec.GridSpecFromSubplotSpec(2, 1, subplot_spec = outer[1], height_ratios = [1, 3],hspace = 0)
     ax2 = plt.subplot(gs2[0])
     ax3 = plt.subplot(gs2[1],sharex=ax2)
-    ax4 = plt.subplot(gs2[2],sharex=ax2)
 
     # Convert times to offsets relative to pulse maximum.
     pulse_max_time = dedisp_times[np.argmax(dedisp_timeseries)]
@@ -192,6 +191,8 @@ def plot_dedisp_ds_SNRvsDM(whole_ds,times,dedisp_ds,dedisp_timeseries,dedisp_tim
         ax3.imshow(dedisp_ds,origin='lower',interpolation='nearest',aspect='auto',extent=ds_ext,norm=LogNorm(vmin=vmin,vmax=vmax))
     ax3.set_ylabel('Radio frequency ('+freq_unit+')',fontsize=16)
 
+    gs3 = gridspec.GridSpecFromSubplotSpec(1, 1, subplot_spec = outer[2])
+    ax4 = plt.subplot(gs3[0],sharex=ax2)
     # Plot non-dedispersed dynamic spectrum in lower panel of bottom gridspec.
     print('Plotting non-dedispersed dynamic spectrum')
     if (log_colorbar==False):
@@ -204,9 +205,9 @@ def plot_dedisp_ds_SNRvsDM(whole_ds,times,dedisp_ds,dedisp_timeseries,dedisp_tim
 
     # Create space for colorbar on right side of plot.
     fig.subplots_adjust(right=0.80)
-    ax1_left, ax1_bottom, ax1_width, ax1_height = ax4.get_position().get_points().flatten()
-    ax0_left, ax0_bottom, ax0_width, ax0_height = ax2.get_position().get_points().flatten()
-    cbar_ax = fig.add_axes([0.83, ax1_bottom, 0.03, ax0_bottom-ax1_bottom])
+    ax4_left, ax4_bottom, ax4_width, ax4_height = ax4.get_position().get_points().flatten()
+    ax2_left, ax2_bottom, ax2_width, ax2_height = ax2.get_position().get_points().flatten()
+    cbar_ax = fig.add_axes([0.83, ax1_bottom, 0.03, ax2_bottom-ax4_bottom])
     h = fig.colorbar(im, cax=cbar_ax)
     h.set_label('Flux density (%s)'% (flux_unit),fontsize=16)
 

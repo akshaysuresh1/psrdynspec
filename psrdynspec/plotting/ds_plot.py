@@ -44,9 +44,9 @@ def plot_ds(ds,t_start,t_stop,freq_low,freq_high,time_unit,freq_unit,flux_unit,b
 
     print('Plotting dynamic spectrum...')
     if (log_colorbar==False):
-        plt.imshow(ds,interpolation='nearest',origin='lower',aspect='auto',extent=[t_start,t_stop,freq_low,freq_high],cmap='Greys',vmin=vmin,vmax=vmax)
+        plt.imshow(ds,interpolation='nearest',origin='lower',aspect='auto',extent=[t_start,t_stop,freq_low,freq_high],cmap='viridis',vmin=vmin,vmax=vmax)
     else:
-        plt.imshow(ds,interpolation='nearest',origin='lower',aspect='auto',extent=[t_start,t_stop,freq_low,freq_high],cmap='Greys',norm=LogNorm(vmin=vmin,vmax=vmax))
+        plt.imshow(ds,interpolation='nearest',origin='lower',aspect='auto',extent=[t_start,t_stop,freq_low,freq_high],cmap='viridis',norm=LogNorm(vmin=vmin,vmax=vmax))
     h = plt.colorbar()
     h.set_label('Flux density ('+flux_unit+')',fontsize=14)
     plt.xlabel('Time ('+time_unit+')',fontsize=14)
