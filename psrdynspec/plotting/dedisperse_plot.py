@@ -74,7 +74,8 @@ def plot_dedisp_subband_SNRvsDM(dedisp_ds,dedisp_timeseries,dedisp_times,freqs_a
     # Convert dedispersed time series from integrated fluxes to S/N.
     dedisp_timeseries = dedisp_timeseries/offpulse_std_value
     # Convert times to offsets relative to pulse maximum.
-    dedisp_time_offset = (dedisp_times -t_cand)*timeoffset_conversion_factor # Dedispersed time offsets
+    pulse_max_time = dedisp_times[np.argmax(dedisp_timeseries)]
+    dedisp_time_offset = (dedisp_times -pulse_max_time)*timeoffset_conversion_factor # Dedispersed time offsets
     ax2.plot(dedisp_time_offset,dedisp_timeseries)
     ax2.set_ylabel('S/N',fontsize=14)
     # Plot the dedispersed dynamic spectrum in lower panel of bottom gridspec.
@@ -162,10 +163,6 @@ def plot_dedisp_ds_SNRvsDM(whole_ds,times,dedisp_ds,dedisp_timeseries,dedisp_tim
     ax2 = plt.subplot(gs2[0])
     ax3 = plt.subplot(gs2[1],sharex=ax2)
 
-    # Convert times to offsets relative to candidate TOA reported by PRESTO.
-    dedisp_time_offset = (dedisp_times - t_cand)*timeoffset_conversion_factor
-    times_offset = (times - t_cand)*timeoffset_conversion_factor
-
     # Plot dedispersed time series in upper panel of bottom gridspec.
     print('Padding dedispersed data products with NaNs to the time span of the non-dedispersed dynamic spectrum')
     N_pad = whole_ds.shape[1] - np.size(dedisp_timeseries)
@@ -175,6 +172,9 @@ def plot_dedisp_ds_SNRvsDM(whole_ds,times,dedisp_ds,dedisp_timeseries,dedisp_tim
     # Plot dedispersed time series in upper panel of bottom gridspec.
     print('Plotting dedispersed time series')
     dedisp_timeseries = dedisp_timeseries/offpulse_std_value # Convert dedispersed timeseries to S/N.
+    pulse_max_time = dedisp_times[np.argmax(dedisp_timeseries)]
+    dedisp_time_offset = (dedisp_times -pulse_max_time)*timeoffset_conversion_factor
+    times_offset = (times - pulse_max_time)*timeoffset_conversion_factor
     ax2.plot(times_offset,dedisp_timeseries)
     ax2.set_ylabel('S/N',fontsize=16)
 
