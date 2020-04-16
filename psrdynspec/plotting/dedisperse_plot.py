@@ -163,6 +163,11 @@ def plot_dedisp_ds_SNRvsDM(whole_ds,times,dedisp_ds,dedisp_timeseries,dedisp_tim
     ax2 = plt.subplot(gs2[0])
     ax3 = plt.subplot(gs2[1],sharex=ax2)
 
+    # Determine time of pulse maximum.
+    pulse_max_time = dedisp_times[np.argmax(dedisp_timeseries)]
+    dedisp_time_offset = (dedisp_times -pulse_max_time)*timeoffset_conversion_factor
+    times_offset = (times - pulse_max_time)*timeoffset_conversion_factor
+
     # Plot dedispersed time series in upper panel of bottom gridspec.
     print('Padding dedispersed data products with NaNs to the time span of the non-dedispersed dynamic spectrum')
     N_pad = whole_ds.shape[1] - np.size(dedisp_timeseries)
@@ -172,9 +177,6 @@ def plot_dedisp_ds_SNRvsDM(whole_ds,times,dedisp_ds,dedisp_timeseries,dedisp_tim
     # Plot dedispersed time series in upper panel of bottom gridspec.
     print('Plotting dedispersed time series')
     dedisp_timeseries = dedisp_timeseries/offpulse_std_value # Convert dedispersed timeseries to S/N.
-    pulse_max_time = dedisp_times[np.argmax(dedisp_timeseries)]
-    dedisp_time_offset = (dedisp_times -pulse_max_time)*timeoffset_conversion_factor
-    times_offset = (times - pulse_max_time)*timeoffset_conversion_factor
     ax2.plot(times_offset,dedisp_timeseries)
     ax2.set_ylabel('S/N',fontsize=16)
 
