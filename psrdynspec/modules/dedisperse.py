@@ -71,7 +71,7 @@ def calc_DM_at_maxSNR(ds,freqs_GHz,trial_DMs,ref_freq,freq_low,t_resol,start_tim
             print('Dedispersing at DM = %s pc/cc'% (DM))
         dedisp_ds, dedisp_times,dedisp_timeseries = dedisperse_ds(ds,freqs_GHz,DM,ref_freq,freq_low,t_resol,start_time)
         signal = np.max(dedisp_timeseries) # Signal
-        offpulse_std = sigma_clip(dedisp_timeseries,sigma=5.0,maxiters=5,cenfunc='median', stdfunc='std').std() # Off-pulse standard deviation
+        offpulse_std = sigma_clip(dedisp_timeseries,sigma=3.0,maxiters=5,cenfunc='median', stdfunc='std').std() # Off-pulse standard deviation
         signal_array[i] = signal
         offpulse_std_array[i] = offpulse_std
     # Find the DM at which S/N gets maximized.

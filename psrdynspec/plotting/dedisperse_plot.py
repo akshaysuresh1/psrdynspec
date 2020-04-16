@@ -117,7 +117,7 @@ vmin = Min. color bar axis value for flux density (default = np.nanmin(whole_ds)
 vmax = Max color bar axis value for flux density (default = np.nanmax(whole_ds))
 log_colorbar = Do you want a log-spaced colorbar? (True/False) (default = False)
 '''
-def plot_dedisp_ds_SNRvsDM(whole_ds,times,dedisp_ds,dedisp_timeseries,dedisp_times,freqs_array,t_cand,t_before,t_resol,trial_DMs,SNR,optimal_DM,offpulse_std_value,flux_unit,freq_unit='GHz',time_offset_unit='s',timeoffset_conversion_factor=1.0,basename='',SAVE_DIR='',show_plot=False,vmin=None,vmax=None,log_colorbar=False):
+def plot_dedisp_ds_SNRvsDM(whole_ds,times,dedisp_ds,dedisp_timeseries,dedisp_times,freqs_array,t_cand,t_resol,trial_DMs,SNR,optimal_DM,offpulse_std_value,flux_unit,freq_unit='GHz',time_offset_unit='s',timeoffset_conversion_factor=1.0,basename='',SAVE_DIR='',show_plot=False,vmin=None,vmax=None,log_colorbar=False):
     # Specify plot name.
     low_freq_limit = np.min(freqs_array)
     high_freq_limit = np.max(freqs_array)
