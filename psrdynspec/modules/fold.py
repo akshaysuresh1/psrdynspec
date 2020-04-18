@@ -143,6 +143,7 @@ def execute_plan(timeseries, times, plan, metric):
     elif (metric=='reduced chi square'):
         metric_function = calc_reduced_chisquare_profile
     periods = plan.periods # 1D array of trial periods
+    fold_bins = plan.fold_bins # 1D array of phase bins to use for folding at above trial periods
     metric_values = np.zeros(len(periods)) # 1D array to store metric values for above trial periods
     print('Folding data at a large number of trial periods...')
     print('Metric: ',metric)
