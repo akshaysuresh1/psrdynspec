@@ -8,6 +8,7 @@ This script contains adapted versions of code/ideas originally implemented in Ri
 import numpy as np
 import pandas as pd
 from psrdynspec.modules.filters1d import blockavg1d
+from astropy.stats import sigma_clip
 ##########################################################################
 # Fold a time series at a given period.
 '''
@@ -111,9 +112,9 @@ Inputs:
 profile = Folded pulse profile
 '''
 def calc_reduced_chisquare_profile(profile):
-    med = np.median(profile)
-    profile_without_outliers = np.ma.masked_outside(profile,med-3*np.std(profile),med+3*np.std(profile))
+    profile_without_outliers = sigma_clip(profile, sigma=3.0, cenfunc='median', stdfunc='std', maxiters=5)
     std_offpulse = np.std(profile_without_outliers)
+    med = np.ma.median(profile_without_outliers)
     reduced_chisquare = np.mean((profile-med)**2)/(std_offpulse**2)
     return reduced_chisquare
 ###########################################################################
