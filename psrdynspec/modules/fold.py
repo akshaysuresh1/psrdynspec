@@ -153,7 +153,7 @@ def execute_plan(timeseries, times, plan, metric):
         N_periods = int(step.N_periods) # No. of periods covered in each octave
         period_min = float(step.period_min) # Minimum octave trial period (s)
         period_max = float(step.period_max) # Maximum octave trial period (s)
-        print('Downsampling input time series by factor %d for octave periods %.4f - &.4f s'% (dsfactor, period_min, period_max))
+        print('Downsampling input time series by factor %d for octave periods %.4f - %.4f s'% (dsfactor, period_min, period_max))
         blkavg_timeseries = blockavg1d(timeseries, dsfactor) # Downsample timeseries by above factor.
         blkavg_times = blockavg1d(times, dsfactor) # Block average 1D array of times by same factor.
         for i in range(N_periods):
