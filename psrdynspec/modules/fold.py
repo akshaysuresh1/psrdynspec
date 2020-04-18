@@ -1,7 +1,14 @@
-# Functions to fold a timeseries or dynamic spectrum at given period.
+'''
+NOTE:
+This script contains adapted versions of code/ideas originally implemented in Riptide (https://github.com/v-morello/riptide).
+'''
 
+# Functions to fold a timeseries or dynamic spectrum at given period, or generate a processing plan for bulk folding.
+# Only brute force time-domain folding supported as of now.
 import numpy as np
-##############################################################
+import pandas as pd
+from psrdynspec.modules.filter1d import blockavg1d
+##########################################################################
 # Fold a time series at a given period.
 '''
 Inputs:
@@ -21,9 +28,9 @@ def fold_ts(timeseries, times, pfold, Nbins):
     for n in range(Nbins):
         profile[n] = np.sum(timeseries[np.where(indbins==n)]) # Sum up timeseries values that belong to one phase bin.
         counts[n] = np.size(np.where(indbins==n)) # No. of counts in bin.
-    profile[1:] /= counts[1:] # Divide by the number of counts to generate an average profile.
-    return profile[1:], phibins[1:]
-##############################################################
+    profile /= counts # Divide by the number of counts to generate an average profile.
+    return profile, phibins
+##########################################################################
 # Convert a long time series into number of rotations and phase bins based on a given rotation period.
 '''
 Inputs:
@@ -59,7 +66,7 @@ def fold_rotations_ts(timeseries, times, pfold, Nbins):
         counts_perrot_phibin[i] = counts[1:]
     #profile_rotations -= np.nanmedian(profile_rotations.flatten())# Set baseline flux to zero.
     return profile_rotations, counts_perrot_phibin, phibins[1:]
-##############################################################
+##########################################################################
 # Fold at a large number of specified periods and keep track of the chosen metric for determining optimal folding period.
 '''
 Inputs:
@@ -89,7 +96,7 @@ def fold_metric_periods(timeseries,times,periods,Nbins,metric):
     best_period = periods[global_metricmax_index]
     print('Metric is maximized is at index %d, i.e., P = %8.6f s.'% (global_metricmax_index,best_period))
     return metric_values, global_metricmax_index, global_metricmax, best_period
-##############################################################
+##########################################################################
 # Calculate profile maximum.
 '''
 Inputs:
@@ -121,4 +128,24 @@ def assign_metlabel(metric):
     elif metric=='reduced chi square':
         label = r'$\chi_{\mathrm{r}}^2$'
     return label
+###########################################################################
+# Execute a folding search on a timeseries based on a plan contained in a ProcessingPlan(..) object.
+'''
+Inputs:
+timeseries = 1D timeseries to fold
+times = 1D array of times (seconds)
+plan = a ProcessingPlan(..) object describing sequence of downsampling and partial searches to be performed
+metric = 'reduced chi square', 'profmax' : Metric for determining optimal folding period.
+'''
+def execute_plan(timeseries, times, plan, metric):
+    if (metric=='profmax'):
+        metric_function = calc_profilemax
+    elif (metric=='reduced chi square'):
+        metric_function = calc_reduced_chisquare_profile
+    N_periods = np.array(plan.octaves['N_periods']) # No. of periods covered in each octave
+    periods = plan.periods # 1D array of trial periods
+    metric_values = np.zeros(len(periods)) # 1D array to store metric values for above trial periods
+    count = 0
+    for _, step in plan.octaves.iterrows():
+        dsfactor = int(step.dsfactor)  # Downsampling factor
 ###########################################################################
