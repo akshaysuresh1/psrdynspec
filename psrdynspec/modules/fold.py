@@ -143,7 +143,7 @@ def execute_plan(timeseries, times, plan, metric):
     elif (metric=='reduced chi square'):
         metric_function = calc_reduced_chisquare_profile
     periods = plan.periods # 1D array of trial periods
-    fold_bins = plan.fold_bins # 1D array of phase bins to use for folding at above trial periods
+    fold_bins = plan.fold_bins.astype(int) # 1D array of phase bins to use for folding at above trial periods
     metric_values = np.zeros(len(periods)) # 1D array to store metric values for above trial periods
     print('Folding data at a large number of trial periods...')
     print('Metric: ',metric)
@@ -159,7 +159,7 @@ def execute_plan(timeseries, times, plan, metric):
         blkavg_times = blockavg1d(times, dsfactor) # Block average 1D array of times by same factor.
         for i in range(N_periods):
             index = count+i
-            profile, phibins = fold_ts(blkavg_timeseries, blkavg_times, periods[index], fold_bins[index])
+            profile, phibins = fold_ts(blkavg_timeseries, blkavg_times, periods[index], int(fold_bins[index]))
             metric_values[index] = metric_function(profile)
             print('%3d         %8.6f        %8.3f'% (index, periods[index], metric_values[index]))
         count += N_periods
