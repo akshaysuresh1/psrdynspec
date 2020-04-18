@@ -28,8 +28,8 @@ def fold_ts(timeseries, times, pfold, Nbins):
     for n in range(Nbins):
         profile[n] = np.sum(timeseries[np.where(indbins==n)]) # Sum up timeseries values that belong to one phase bin.
         counts[n] = np.size(np.where(indbins==n)) # No. of counts in bin.
-    profile /= counts # Divide by the number of counts to generate an average profile.
-    return profile, phibins
+    profile[1:] /= counts[1:] # Divide by the number of counts to generate an average profile.
+    return profile[1:], phibins[1:]
 ##########################################################################
 # Convert a long time series into number of rotations and phase bins based on a given rotation period.
 '''
@@ -142,10 +142,31 @@ def execute_plan(timeseries, times, plan, metric):
         metric_function = calc_profilemax
     elif (metric=='reduced chi square'):
         metric_function = calc_reduced_chisquare_profile
-    N_periods = np.array(plan.octaves['N_periods']) # No. of periods covered in each octave
     periods = plan.periods # 1D array of trial periods
     metric_values = np.zeros(len(periods)) # 1D array to store metric values for above trial periods
-    count = 0
+    print('Folding data at a large number of trial periods...')
+    print('Metric: ',metric)
+    print('Index      Period (s)       Metric value')
+    count = 0 # Keep track of cumulative number of periods covered after each octave.
     for _, step in plan.octaves.iterrows():
         dsfactor = int(step.dsfactor)  # Downsampling factor
+        N_periods = int(step.N_periods) # No. of periods covered in each octave
+        period_min = float(step.period_min) # Minimum octave trial period (s)
+        period_max = float(step.period_max) # Maximum octave trial period (s)
+        print('Downsampling input time series by factor %d for octave periods %.4f - &.4f s'% (dsfactor, period_min, period_max))
+        blkavg_timeseries = blockavg1d(timeseries, dsfactor) # Downsample timeseries by above factor.
+        blkavg_times = blockavg1d(times, dsfactor) # Block average 1D array of times by same factor.
+        for i in range(N_periods):
+            index = count+i
+            profile, phibins = fold_ts(blkavg_timeseries, blkavg_times, periods[index], fold_bins[index])
+            metric_values[index] = metric_function(profile)
+            print('%3d         %8.6f        %8.3f'% (index, periods[index], metric_values[index]))
+        count += N_periods
+
+    # Find trial period that maximizes the chosen metric.
+    global_metricmax_index = np.nanargmax(metric_values)
+    global_metricmax = np.nanmax(metric_values)
+    best_period = periods[global_metricmax_index]
+    print('Metric is maximized is at index %d, i.e., P = %8.6f s.'% (global_metricmax_index,best_period))
+    return metric_values, global_metricmax_index, global_metricmax, best_period
 ###########################################################################

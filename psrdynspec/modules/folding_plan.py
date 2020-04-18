@@ -92,18 +92,22 @@ N = No. of samples in input timeseries
 
 Returns:
 periods = 1D array of trial folding periods (s)
+fold_bins = 1D array of phase bins to use for folding at above trial periods
 '''
 def gen_periods(octaves, tau, N):
     periods = [] # Construct 1D array of periods assuming optimal spacing from FFA search.
+    fold_bins = [] # 1D array of phase bins to use for folding at above trial periods.
     for _, step in octaves.iterrows():
         ds = step.dsfactor
         ns = int(N/ds)
         bins = np.arange(int(step.bins_min), int(step.bins_max))
         for b in bins:
             m = int(ns/b)
+            fold.bins.append(np.ones(m)*b)
             for sh in range(m):
                 periods.append(ds*b + ds*sh*b/(m*b - sh))
     periods = np.array(periods)*tau
+    fold_bins = np.hstack(np.array(fold_bins))
 
     # A period at the final slope s=(m-1) of a base period p (samples) will be covered at a small value of s for the next base period (p+1)..
     # Remove instances of such redundant periods.
@@ -121,7 +125,7 @@ def gen_periods(octaves, tau, N):
                 break
     mask = mask[::-1] # Reverse mask.
 
-    return periods[mask]
+    return periods[mask], fold_bins[mask]
 
 '''
 Updates pandas DataFrame to include no. of periods covered in each octave.
@@ -157,7 +161,7 @@ class ProcessingPlan(object):
     ''' Defines the sequence of downsamplings and octave searches to perform on a time series.
     '''
 
-    def __init__(self, nsamp, tsamp, bins_min, octaves, periods):
+    def __init__(self, nsamp, tsamp, bins_min, octaves, periods, fold_bins):
         '''
         This should not be called directly. Use ProcessingPlan.create() instead.
         '''
@@ -168,14 +172,15 @@ class ProcessingPlan(object):
         self.octaves = octaves
         self.period_min = np.min(periods)
         self.period_max = np.max(periods)
+        self.fold_bins = fold_bins
         self.min_width_res = self.period_min/self.bins_min # Minimum pulse width resolution
 
     @staticmethod
     def create(nsamp, tsamp, bins_min, P_min, P_max):
         octaves = gen_octaves(P_min, P_max, bins_min, tsamp)
-        periods = gen_periods(octaves, tsamp, nsamp)
+        periods, fold_bins = gen_periods(octaves, tsamp, nsamp)
         octaves = update_processing_plan(octaves, periods)
-        return ProcessingPlan(nsamp, tsamp, bins_min, octaves, periods)
+        return ProcessingPlan(nsamp, tsamp, bins_min, octaves, periods, fold_bins)
 
     def __repr__(self):
         lines = ['Properties of input timeseries:',
