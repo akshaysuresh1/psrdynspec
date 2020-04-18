@@ -149,6 +149,7 @@ def execute_plan(timeseries, times, plan, metric):
     print('Metric: ',metric)
     print('Index      Period (s)       Metric value')
     count = 0 # Keep track of cumulative number of periods covered after each octave.
+    dsfactor_values = np.zeros(len(periods)) # Keep track of downsampling factors for different trial periods.
     for _, step in plan.octaves.iterrows():
         dsfactor = int(step.dsfactor)  # Downsampling factor
         N_periods = int(step.N_periods) # No. of periods covered in each octave
@@ -162,12 +163,16 @@ def execute_plan(timeseries, times, plan, metric):
             profile, phibins = fold_ts(blkavg_timeseries, blkavg_times, periods[index], int(fold_bins[index]))
             metric_values[index] = metric_function(profile)
             print('%3d         %8.6f        %8.3f'% (index, periods[index], metric_values[index]))
+        dsfactor_values[count:count+N_periods] =  dsfactor
         count += N_periods
 
     # Find trial period that maximizes the chosen metric.
     global_metricmax_index = np.nanargmax(metric_values)
     global_metricmax = np.nanmax(metric_values)
     best_period = periods[global_metricmax_index]
+    optimal_bins = fold_bins[global_metricmax_index]
+    optimal_dsfactor = dsfactor_values[global_metricmax_index]
     print('Metric is maximized is at index %d, i.e., P = %8.6f s.'% (global_metricmax_index,best_period))
-    return metric_values, global_metricmax_index, global_metricmax, best_period
+
+    return metric_values, global_metricmax_index, global_metricmax, best_period, optimal_bins, optimal_dsfactor
 ###########################################################################

@@ -116,14 +116,19 @@ def gen_periods(octaves, tau, N):
     rev_periods = periods[::-1]
     diff = np.diff(rev_periods)
 
-    # Find indices whre the immediately succesive element is greater.
+    # Find indices where the immediately succesive element is greater.
     indices = np.where(diff > 0)[0]
     for ix in indices:
         for jj in range(ix+1, rev_periods.size):
             mask[jj] = False
             if rev_periods[jj] < rev_periods[ix]:
                 break
-    mask = mask[::-1] # Reverse mask.
+    mask = mask[::-1] # Reverse mask.            
+
+    # Find indices where the trial periods are greater than the maximum period of the last octave.
+    indices = np.where(periods>=np.max(np.array(octaves.period_max)))[0]
+    if len(indices)!=0:
+        mask[indices] = False
 
     return periods[mask], fold_bins[mask]
 
