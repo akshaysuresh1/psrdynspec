@@ -7,7 +7,7 @@ This script contains adapted versions of code/ideas originally implemented in Ri
 # Only brute force time-domain folding supported as of now.
 import numpy as np
 import pandas as pd
-from psrdynspec.modules.filter1d import blockavg1d
+from psrdynspec.modules.filters1d import blockavg1d
 ##########################################################################
 # Fold a time series at a given period.
 '''
