@@ -103,7 +103,7 @@ def gen_periods(octaves, tau, N):
         bins = np.arange(int(step.bins_min), int(step.bins_max))
         for b in bins:
             m = int(ns/b)
-            fold.bins.append(np.ones(m)*b)
+            fold_bins.append(np.ones(m)*b)
             for sh in range(m):
                 periods.append(ds*b + ds*sh*b/(m*b - sh))
     periods = np.array(periods)*tau
