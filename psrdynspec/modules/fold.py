@@ -83,6 +83,8 @@ def fold_metric_periods(timeseries,times,periods,Nbins,metric):
         metric_function = calc_profilemax
     elif (metric=='reduced chi square'):
         metric_function = calc_reduced_chisquare_profile
+    elif (metric=='S/N'):
+        metric_function = calc_sn
     print('Folding data at a large number of trial periods...')
     print('Metric: ',metric)
     print('Index      Period (s)       Metric value')
@@ -118,6 +120,18 @@ def calc_reduced_chisquare_profile(profile):
     reduced_chisquare = np.mean((profile-med)**2)/(std_offpulse**2)
     return reduced_chisquare
 ###########################################################################
+# Calculate signal-to-noise ratio of a profile.
+'''
+Inputs:
+profile = Folded pulse profile
+'''
+def calc_sn(profile):
+    profile_without_outliers = sigma_clip(profile, sigma=3.0, cenfunc='median', stdfunc='std', maxiters=5)
+    noise = np.std(profile_without_outliers)
+    signal = np.max(profile)
+    sn = signal/noise
+    return sn
+###########################################################################
 # Assign plotting labels to different metrics.
 '''
 Inputs:
@@ -128,6 +142,8 @@ def assign_metlabel(metric):
         label = 'Profile maximum'
     elif metric=='reduced chi square':
         label = r'$\chi_{\mathrm{r}}^2$'
+    elif metric=='S/N':
+        label = 'S/N'
     return label
 ###########################################################################
 # Execute a folding search on a timeseries based on a plan contained in a ProcessingPlan(..) object.
@@ -143,6 +159,8 @@ def execute_plan(timeseries, times, plan, metric):
         metric_function = calc_profilemax
     elif (metric=='reduced chi square'):
         metric_function = calc_reduced_chisquare_profile
+    elif (metric=='S/N'):
+        metric_function = calc_sn        
     periods = plan.periods # 1D array of trial periods
     fold_bins = plan.fold_bins.astype(int) # 1D array of phase bins to use for folding at above trial periods
     metric_values = np.zeros(len(periods)) # 1D array to store metric values for above trial periods
