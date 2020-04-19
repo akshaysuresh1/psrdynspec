@@ -65,7 +65,7 @@ show_plot = Do you want to show the plot live? (True/False)  (default = False)
 def subplots_metric_profile(trial_periods,metric_values,met_label,phasebins,profile,best_period,basename,SAVE_DIR,show_plot=False):
     plot_name = basename+'_metric_bestprofile.png'
     fig,axes = plt.subplots(nrows=2,ncols=1,gridspec_kw={'height_ratios': [1, 1.5]},figsize=(6,7.2))
-    min_period = np,min(trial_periods)
+    min_period = np.min(trial_periods)
     max_period = np.max(trial_periods)
     period_ratio = max_period/min_period
     print('Plotting metric values vs. trial folding period.')
