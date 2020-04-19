@@ -1,8 +1,16 @@
 # Set default plot settings.
 
 import matplotlib as mpl
-# Use Qt5Agg backend to enable interactive plotting (if needed).
-mpl.use('Qt5Agg')
+try:
+    __IPYTHON__
+except NameError:
+    print("Not in IPython. Setting matplotlib backend to Agg.")
+    mpl.use('Agg')
+else:
+    print("In IPython")
+    # Use Qt5Agg backend to enable interactive plotting (if needed).
+    mpl.use('Qt5Agg')
+
 # Enable use of LaTeX labels in plots.
 mpl.rcParams['text.usetex'] = True
 mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
