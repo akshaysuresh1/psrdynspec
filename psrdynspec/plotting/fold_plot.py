@@ -2,18 +2,33 @@ from .config import *
 
 # Plots saved to disk by default. Plots displayed on live window only if show_plot==True.
 ##########################################################################
+# Assign plotting labels to different metrics.
+'''
+Inputs:
+metric = Metric to maximize for determining optimal folding period ('reducedchisquare', 'profmax', 'profSNR')
+'''
+def assign_metlabel(metric):
+    if metric=='profmax':
+        label = 'Profile maximum'
+    elif metric=='reducedchisquare':
+        label = r'$\chi_{\mathrm{r}}^2$'
+    elif metric=='profSNR':
+        label = 'Profile S/N'
+    return label
+###########################################################################
 # Plot metric values vs. trial folding periods.
 '''
 Inputs:
 trial_periods = 1D array of trial folding periods (s)
 metric_values = 1D array of metric values at above folding periods
-met_label = Metric label
+metric = Metric to maximize for determining optimal folding period ('reducedchisquare', 'profmax', 'profSNR')
 basename = Basename of output plot
 SAVE_DIR = Path to which plot must be saved
 show_plot = Do you want to show the plot live? (True/False) (default = False)
 '''
-def plot_metricvsperiod(trial_periods,metric_values,met_label,basename,SAVE_DIR,show_plot=False):
-    plot_name = basename+'_metric_vs_periods.png'
+def plot_metricvsperiod(trial_periods,metric_values,metric,basename,SAVE_DIR,show_plot=False):
+    plot_name = basename+'_%s_vs_periods.png'% (metric)
+    met_label = assign_metlabel(metric)
     print('Plotting metric values vs. trial folding periods...')
     plt.figure()
     plt.plot(trial_periods,metric_values)
@@ -54,7 +69,7 @@ def plot_avgpulseprofile(phasebins,profile,pfold,basename,SAVE_DIR,show_plot=Fal
 Inputs:
 trial_periods = 1D array of trial folding periods (s)
 metric_values = 1D array of metric values at above folding periods
-met_label = Metric label
+metric = Metric to maximize for determining optimal folding period ('reducedchisquare', 'profmax', 'profSNR')
 phasebins = 1D array of phase values
 profile = Average pulse profile (1D array) obtained by folding time series at the best period
 best_period = Folding period (s) that maximizes the chosen metric.
@@ -62,8 +77,9 @@ basename = Basename of output plot
 SAVE_DIR = Path to which plot must be saved
 show_plot = Do you want to show the plot live? (True/False)  (default = False)
 '''
-def subplots_metric_profile(trial_periods,metric_values,met_label,phasebins,profile,best_period,basename,SAVE_DIR,show_plot=False):
-    plot_name = basename+'_metric_bestprofile.png'
+def subplots_metric_profile(trial_periods,metric_values,metric,phasebins,profile,best_period,basename,SAVE_DIR,show_plot=False):
+    plot_name = basename+'_%s_bestprofile.png'% (metric)
+    met_label = assign_metlabel(metric)
     fig,axes = plt.subplots(nrows=2,ncols=1,gridspec_kw={'height_ratios': [1, 1.5]},figsize=(9,6.5))
     axes[0].plot(trial_periods,metric_values, marker='o', markersize=2, alpha=0.5,color='k')
     #axes[0].axvline(x=best_period,label='P$_{\mathrm{opt}}$ = %.5f s'% (best_period),linestyle='--',color='darkorange')

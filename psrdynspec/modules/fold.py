@@ -1,8 +1,3 @@
-'''
-NOTE:
-This script contains adapted versions of code/ideas originally implemented in Riptide (https://github.com/v-morello/riptide).
-'''
-
 # Functions to fold a timeseries or dynamic spectrum at given period, or generate a processing plan for bulk folding.
 # Only brute force time-domain folding supported as of now.
 import numpy as np
@@ -68,6 +63,20 @@ def fold_rotations_ts(timeseries, times, pfold, Nbins):
     #profile_rotations -= np.nanmedian(profile_rotations.flatten())# Set baseline flux to zero.
     return profile_rotations, counts_perrot_phibin, phibins[1:]
 ##########################################################################
+# Select the metric function corresponding to specified metric string.
+'''
+Inputs:
+metric = Metric to maximize for determining optimal folding period ('reducedchisquare', 'profmax', 'profSNR')
+'''
+def select_metric_function(metric):
+    if (metric=='profmax'):
+        metric_function = calc_profilemax
+    elif (metric=='reduced chi square'):
+        metric_function = calc_reduced_chisquare_profile
+    elif (metric=='profSNR'):
+        metric_function = calc_sn
+    return metric_function
+##########################################################################
 # Fold at a large number of specified periods and keep track of the chosen metric for determining optimal folding period.
 '''
 Inputs:
@@ -79,12 +88,7 @@ metric = 'reduced chi square', 'profmax' : Metric for determining optimal foldin
 '''
 def fold_metric_periods(timeseries,times,periods,Nbins,metric):
     metric_values = np.zeros(len(periods))
-    if (metric=='profmax'):
-        metric_function = calc_profilemax
-    elif (metric=='reduced chi square'):
-        metric_function = calc_reduced_chisquare_profile
-    elif (metric=='S/N'):
-        metric_function = calc_sn
+    metric_function = select_metric_function(metric)
     print('Folding data at a large number of trial periods...')
     print('Metric: ',metric)
     print('Index      Period (s)       Metric value')
@@ -132,20 +136,6 @@ def calc_sn(profile):
     sn = signal/noise
     return sn
 ###########################################################################
-# Assign plotting labels to different metrics.
-'''
-Inputs:
-metric = Metric to maximize for determining optimal folding period
-'''
-def assign_metlabel(metric):
-    if metric=='profmax':
-        label = 'Profile maximum'
-    elif metric=='reduced chi square':
-        label = r'$\chi_{\mathrm{r}}^2$'
-    elif metric=='S/N':
-        label = 'S/N'
-    return label
-###########################################################################
 # Execute a folding search on a timeseries based on a plan contained in a ProcessingPlan(..) object.
 '''
 Inputs:
@@ -155,12 +145,7 @@ plan = a ProcessingPlan(..) object describing sequence of downsampling and parti
 metric = 'reduced chi square', 'profmax' : Metric for determining optimal folding period.
 '''
 def execute_plan(timeseries, times, plan, metric):
-    if (metric=='profmax'):
-        metric_function = calc_profilemax
-    elif (metric=='reduced chi square'):
-        metric_function = calc_reduced_chisquare_profile
-    elif (metric=='S/N'):
-        metric_function = calc_sn        
+    metric_function = select_metric_function(metric)
     periods = plan.periods # 1D array of trial periods
     fold_bins = plan.fold_bins.astype(int) # 1D array of phase bins to use for folding at above trial periods
     metric_values = np.zeros(len(periods)) # 1D array to store metric values for above trial periods
