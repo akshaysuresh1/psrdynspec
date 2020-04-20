@@ -89,7 +89,7 @@ def subplots_metric_profile(trial_periods,metric_values,metric,phasebins,profile
     #axes[0].legend(loc='best',prop={'size':14})
     print('Plotting folded pulse profile at best period.')
     axes[1].plot(phasebins,profile,'-k')
-    axes[1].annotate('P$_{\mathrm{opt}}$ = %.5f s'% (best_period), xycoords='axes fraction',xy=(0.8,0.91),fontsize=14)
+    axes[1].annotate('P$_{\mathrm{opt}}$ = %.5f s'% (best_period), xycoords='axes fraction',xy=(0.77,0.91),fontsize=14)
     axes[1].set_xlabel('Phase',fontsize=14)
     axes[1].set_ylabel('Flux (arbitrary units)',fontsize=14)
     fig.subplots_adjust(left=0.1, right=0.9, top=0.9,bottom=0.1,hspace=0.3)
