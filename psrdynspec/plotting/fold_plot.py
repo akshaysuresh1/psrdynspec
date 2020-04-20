@@ -64,16 +64,19 @@ show_plot = Do you want to show the plot live? (True/False)  (default = False)
 '''
 def subplots_metric_profile(trial_periods,metric_values,met_label,phasebins,profile,best_period,basename,SAVE_DIR,show_plot=False):
     plot_name = basename+'_metric_bestprofile.png'
-    fig,axes = plt.subplots(nrows=2,ncols=1,gridspec_kw={'height_ratios': [1, 1.5]},figsize=(6,7.2))
-    axes[0].plot(trial_periods,metric_values,'-k')
-    axes[0].axvline(x=best_period,label='P$_{\mathrm{opt}}$ = %.5f s'% (best_period),linestyle='--',color='darkorange')
+    fig,axes = plt.subplots(nrows=2,ncols=1,gridspec_kw={'height_ratios': [1, 1.5]},figsize=(9,6.5))
+    axes[0].plot(trial_periods,metric_values, marker='o', markersize=2, alpha=0.5,color='k')
+    #axes[0].axvline(x=best_period,label='P$_{\mathrm{opt}}$ = %.5f s'% (best_period),linestyle='--',color='darkorange')
+    axes[0].set_xlim(np.min(periods), np.max(periods))
     axes[0].set_xlabel('Trial folding period (s)',fontsize=14)
     axes[0].set_ylabel(met_label,fontsize=14)
-    axes[0].legend(loc='best',prop={'size':14})
+    #axes[0].legend(loc='best',prop={'size':14})
     print('Plotting folded pulse profile at best period.')
     axes[1].plot(phasebins,profile,'-k')
+    axes[1].annotate('P$_{\mathrm{opt}}$ = %.5f s'% (best_period), xycoords='axes fraction',xy=(0.8,0.91),fontsize=14)
     axes[1].set_xlabel('Phase',fontsize=14)
     axes[1].set_ylabel('Flux (arbitrary units)',fontsize=14)
+    fig.subplots_adjust(left=0.1, right=0.9, top=0.9,bottom=0.1,hspace=0.3)
     plt.savefig(SAVE_DIR+plot_name)
     if (show_plot==True):
         plt.show()
