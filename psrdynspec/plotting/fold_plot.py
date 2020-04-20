@@ -83,7 +83,7 @@ def subplots_metric_profile(trial_periods,metric_values,metric,phasebins,profile
     fig,axes = plt.subplots(nrows=2,ncols=1,gridspec_kw={'height_ratios': [1, 1.5]},figsize=(9,6.5))
     axes[0].plot(trial_periods,metric_values, marker='o', markersize=2, alpha=0.5,color='k')
     #axes[0].axvline(x=best_period,label='P$_{\mathrm{opt}}$ = %.5f s'% (best_period),linestyle='--',color='darkorange')
-    axes[0].set_xlim(np.min(periods), np.max(periods))
+    axes[0].set_xlim(np.min(trial_periods), np.max(trial_periods))
     axes[0].set_xlabel('Trial folding period (s)',fontsize=14)
     axes[0].set_ylabel(met_label,fontsize=14)
     #axes[0].legend(loc='best',prop={'size':14})
