@@ -138,7 +138,7 @@ def gen_periods(octaves, tau, N):
         mask[indices] = False
 
     # Find indices where the trial periods are shorter than the minimum period of the last octave.
-    indices = np.where(periods<np.max(np.array(octaves.period_minn)))[0]
+    indices = np.where(periods<np.max(np.array(octaves.period_min)))[0]
     if len(indices)!=0:
         mask[indices] = False
 
