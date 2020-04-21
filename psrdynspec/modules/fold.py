@@ -75,6 +75,9 @@ def select_metric_function(metric):
         metric_function = calc_reduced_chisquare_profile
     elif (metric=='profSNR'):
         metric_function = calc_sn
+    else:
+        print('Chosen metric not recognized.')
+        return None    
     return metric_function
 ##########################################################################
 # Fold at a large number of specified periods and keep track of the chosen metric for determining optimal folding period.
