@@ -71,11 +71,17 @@ def gen_octaves(P_min, P_max, bins_min, tau):
 
     octaves = pd.DataFrame(octaves, columns=column_names)
 
-    # Edit last octave to stop folding search at a period sufficiently close to Pmax.
+    # Edit first octave to start folding search sufficiently close to but less than P_min.
+    first_octave = octaves.iloc[0]
+    first_bins_min = int(np.floor(P_min/first_octave.tsamp))
+    first_period_min =  first_bins_min*first_octave.tsamp
+    octaves.loc[0,'bins_min'] = first_bins_min
+    octaves.loc[0,'period_min'] = first_period_min
+
+    # Edit last octave to stop folding search at a period sufficiently close to P_max.
     last_octave = octaves.iloc[-1]
     last_bins_max = int(np.ceil(P_max/last_octave.tsamp))
     last_periods_max = last_bins_max*last_octave.tsamp
-
     index = len(octaves)-1
     octaves.loc[index,'bins_max'] = last_bins_max
     octaves.loc[index,'period_max'] = last_periods_max
@@ -89,6 +95,7 @@ Inputs:
 octaves = pandas DataFrame object containing processing details of each octave
 tau = Sampling time (s) in input timeseries to fold at multiple periods
 N = No. of samples in input timeseries
+P_min = Minimum period (s)
 
 Returns:
 periods = 1D array of trial folding periods (s)
@@ -123,9 +130,14 @@ def gen_periods(octaves, tau, N):
             mask[jj] = False
             if rev_periods[jj] < rev_periods[ix]:
                 break
-    mask = mask[::-1] # Reverse mask.            
+    mask = mask[::-1] # Reverse mask.
 
     # Find indices where the trial periods are greater than the maximum period of the last octave.
+    indices = np.where(periods>=np.max(np.array(octaves.period_max)))[0]
+    if len(indices)!=0:
+        mask[indices] = False
+
+    # Find indices where the trial periods are shorter than the minimum period of the last octave.
     indices = np.where(periods>=np.max(np.array(octaves.period_max)))[0]
     if len(indices)!=0:
         mask[indices] = False
