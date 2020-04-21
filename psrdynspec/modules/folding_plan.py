@@ -138,7 +138,7 @@ def gen_periods(octaves, tau, N):
         mask[indices] = False
 
     # Find indices where the trial periods are shorter than the minimum period of the last octave.
-    indices = np.where(periods<np.max(np.array(octaves.period_min)))[0]
+    indices = np.where(periods<np.min(np.array(octaves.period_min)))[0]
     if len(indices)!=0:
         mask[indices] = False
 
@@ -190,7 +190,7 @@ class ProcessingPlan(object):
         self.period_min = np.min(periods)
         self.period_max = np.max(periods)
         self.fold_bins = fold_bins
-        self.min_width_res = self.period_min/self.bins_min # Minimum pulse width resolution
+        self.min_width_res = self.period_min/octaves.loc[0,'bins_min'] # Minimum pulse width resolution
 
     @staticmethod
     def create(nsamp, tsamp, bins_min, P_min, P_max):
