@@ -7,7 +7,7 @@ if platform=='darwin': # MacOS
     screen_backend = 'Agg'
     interactive_backend = 'MacOSX'
 else:
-    screen_backend = 'TkAgg'
+    screen_backend = 'Agg'
     interactive_backend = 'Qt5Agg'
 
 # If scripts are run from ipython, use interactive backend. Otherwise, use backends that do not require an X-window.
