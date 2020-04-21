@@ -71,13 +71,13 @@ metric = Metric to maximize for determining optimal folding period ('reducedchis
 def select_metric_function(metric):
     if (metric=='profmax'):
         metric_function = calc_profilemax
-    elif (metric=='reduced chi square'):
+    elif (metric=='reducedchisquare'):
         metric_function = calc_reduced_chisquare_profile
     elif (metric=='profSNR'):
         metric_function = calc_sn
     else:
         print('Chosen metric not recognized.')
-        return None    
+        return None
     return metric_function
 ##########################################################################
 # Fold at a large number of specified periods and keep track of the chosen metric for determining optimal folding period.
