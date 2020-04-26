@@ -45,5 +45,7 @@ def read_rfimask(mask_file, MASK_DIR):
             tozap = np.asarray([])
         mask_zap_chans_per_int.append(tozap)
     x.close()
-    return times, ptsperint, mask_zap_chans, mask_zap_ints, mask_zap_chans_per_int
-############################################################################    
+    mask_zap_chans = np.array(list(mask_zap_chans))
+    mask_zap_ints = np.array(list(mask_zap_ints))
+    return nint, times, ptsperint, mask_zap_chans, mask_zap_ints, mask_zap_chans_per_int
+############################################################################
