@@ -1,0 +1,49 @@
+# Functions to read and modify an "rfifind" mask generated using PRESTO
+import numpy as np
+############################################################################
+# Open a rfifind mask and return an array of channels and integrations to mask.
+'''
+Inputs:
+mask_file = Name of rfifind mask together with its .mask extension
+MASK_DIR = Path to mask_file
+
+Returns:
+times = 1D array of times (s) post integration for computation of stats by rfifind
+ptsperint = No. of time samples per integration
+mask_zap_chans = 1D array of entire channels to mask
+mask_zap_ints = 1D array of entire time integrations to mask
+mask_zap_chans_per_int = Set of channels to mask for each time integration.
+'''
+def read_rfimask(mask_file, MASK_DIR):
+    x = open(MASK_DIR + mask_file)
+    time_sig, freq_sig, MJD, dtint, lofreq, df = np.fromfile(x, dtype=np.float64, count=6)
+    nchan, nint, ptsperint = np.fromfile(x, dtype=np.int32, count=3)
+    freqs = np.arange(nchan)*df + lofreq
+    times = np.arange(nint)*dtint
+    MJDs = times/86400.0 + MJD
+    nzap = np.fromfile(x, dtype=np.int32, count=1)[0]
+    if nzap:
+        mask_zap_chans = np.fromfile(x, dtype=np.int32, count=nzap)
+    else:
+        mask_zap_chans = np.asarray([])
+    mask_zap_chans = set(mask_zap_chans)
+    if len(mask_zap_chans)==nchan:
+        print("WARNING!:  All channels recommended for masking!")
+    nzap = np.fromfile(x, dtype=np.int32, count=1)[0]
+    if nzap:
+        mask_zap_ints = np.fromfile(x, dtype=np.int32, count=nzap)
+    else:
+        mask_zap_ints = np.asarray([])
+    if len(mask_zap_ints)==nint:
+        print("WARNING!:  All intervals recommended for masking!")
+    nzap_per_int = np.fromfile(x, dtype=np.int32, count=nint)
+    mask_zap_chans_per_int = []
+    for nzap in nzap_per_int:
+        if nzap:
+            tozap = np.fromfile(x, dtype=np.int32, count=nzap)
+        else:
+            tozap = np.asarray([])
+        mask_zap_chans_per_int.append(tozap)
+    x.close()
+    return times, ptsperint, mask_zap_chans, mask_zap_ints, mask_zap_chans_per_int
+############################################################################    
