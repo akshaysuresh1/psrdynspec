@@ -38,7 +38,10 @@ def blockavg1d(data,R):
     pad_size = int(np.ceil(float(data_size)/R)*R - float(data_size))
     # Pad the data with NaNs to a size divisible by R.
     pad_array1d = np.ones(pad_size)*np.NaN
-    padded_data = np.append(data,pad_array1d)
+    if np.ma.is_masked(data):
+        padded_data = np.ma.append(data,pad_array1d)
+    else:
+        padded_data = np.append(data,pad_array1d)
     pad_axis_length = len(padded_data)
     blkavg_data = np.nanmean(padded_data.reshape((pad_axis_length//R,R)),axis=1)
     return blkavg_data

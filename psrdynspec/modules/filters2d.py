@@ -143,7 +143,10 @@ def blockavg_axis2(data,R):
     pad_size = int(np.ceil(float(ax2_length)/R)*R - float(ax2_length))
     pad_array = np.zeros((ax1_length,pad_size))*np.NaN
     # Pad the data with pad_array.
-    padded_data = np.concatenate((data,pad_array),axis=1)
+    if np.ma.is_masked(data):
+        padded_data = np.ma.concatenate((data,pad_array),axis=1)
+    else:
+        padded_data = np.concatenate((data,pad_array),axis=1)
     pad_ax2_length = padded_data.shape[1]
     blkavg_ax2_data = np.nanmean(padded_data.reshape((ax1_length,pad_ax2_length//R,R)),axis=2)
     return blkavg_ax2_data
