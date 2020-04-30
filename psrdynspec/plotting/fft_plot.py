@@ -60,7 +60,7 @@ show_plot = Do you want to show the plot? (True/False) (default = False)
 plot_format = Format of output plot E.g., '.png', '.eps', etc.
 '''
 def fft_gridplot(times, timeseries, fourier_freqs, power_spectrum, max_fourierfreq_plot, timeseries_unit, powerspec_unit, DM, radiofreq_annotation, special_fourierfreq, basename, SAVE_DIR, show_plot, plot_format):
-    plot_name = basename+'_DM%.1f'% (DM)+'_FFTgrid'+plot_format
+    plot_name = basename+'_FFTgrid'+plot_format
     # Construct the gridspec framework for figure.
     fig = plt.figure(figsize=(8,8))
     #make outer gridspec
