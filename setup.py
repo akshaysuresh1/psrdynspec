@@ -3,12 +3,12 @@ setup.py -- setup script for installation and use of packages
 """
 from setuptools import setup, find_packages
 
-__version__ = '1.0.0'
+__version__ = '1.1.0'
 
 install_requires = [
         'matplotlib>3.0;python_version>"3.7"',
         'astropy>4.0;python_version>"3.7"',
-        'blimpy==1.4.2',
+        'blimpy==2.0.0',
         'numpy',
         'scipy',
         'pandas'

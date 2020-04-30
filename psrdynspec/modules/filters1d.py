@@ -46,3 +46,5 @@ def blockavg1d(data,R):
     blkavg_data = np.nanmean(padded_data.reshape((pad_axis_length//R,R)),axis=1)
     return blkavg_data
 ######################################################
+def print_hello(N_times):
+    print('Hello world')

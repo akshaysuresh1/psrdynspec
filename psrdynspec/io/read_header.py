@@ -22,12 +22,12 @@ class Header(object):
                     self.primary['hdr_size'] = len_header(file_list[i])
                     self.subint = {}
 
-            self.t_samp = self.primary[b'tsamp']          # Time sampling (s)
+            self.t_samp = self.primary['tsamp']          # Time sampling (s)
             self.tot_time = self.t_samp * self.ntsamples # Total time (s)
-            self.chan_bw = self.primary[b'foff']          # Channel bandwidth (MHz)
-            self.fch1 = self.primary[b'fch1']             # Start frequency (MHz)
-            self.nchans = self.primary[b'nchans']         # No. of channels
-            self.npol = self.primary[b'nifs']             # No. of polarizations
+            self.chan_bw = self.primary['foff']          # Channel bandwidth (MHz)
+            self.fch1 = self.primary['fch1']             # Start frequency (MHz)
+            self.nchans = self.primary['nchans']         # No. of channels
+            self.npol = self.primary['nifs']             # No. of polarizations
 
 
         if (file_type=='psrfits'):
