@@ -69,7 +69,7 @@ def fft_gridplot(times, timeseries, fourier_freqs, power_spectrum, max_fourierfr
     # Plot timeseries in top gridspec.
     gs1 = gridspec.GridSpecFromSubplotSpec(1, 1, subplot_spec = outer[0])
     ax1 = plt.subplot(gs1[0])
-    ax1.plot(times, timeseries)
+    ax1.plot(times, timeseries,color='k')
     ax1.annotate(radiofreq_annotation, xy=(0.05,0.8), xycoords='axes fraction',fontsize=14)
     ax1.annotate('DM = %.1f pc cm$^{-3}$'% (DM), xy=(0.7,0.8), xycoords='axes fraction',fontsize=14)
     ax1.set_xlabel('Time (s)', fontsize=14)
@@ -80,29 +80,29 @@ def fft_gridplot(times, timeseries, fourier_freqs, power_spectrum, max_fourierfr
     gs2 = gridspec.GridSpecFromSubplotSpec(4, 1, subplot_spec = outer[1],hspace=0.3)
     # Full frequency range in top sub-panel.
     ax20 = plt.subplot(gs2[0])
-    ax20.plot(fourier_freqs, power_spectrum)
+    ax20.plot(fourier_freqs, power_spectrum,color='k')
     ax20.set_xlim((0,max_fourierfreq_plot))
     # Show FFT over [0, 0.5*max_fourierfreq_plot] in second sub-panel.
     ax21 = plt.subplot(gs2[1])
-    ax21.plot(fourier_freqs, power_spectrum)
+    ax21.plot(fourier_freqs, power_spectrum,color='k')
     ax21.set_xlim((0,0.5*max_fourierfreq_plot))
     # Show FFT over [0, 0.25*max_fourierfreq_plot] in second sub-panel.
     ax22 = plt.subplot(gs2[2])
-    ax22.plot(fourier_freqs, power_spectrum)
+    ax22.plot(fourier_freqs, power_spectrum,color='k')
     ax22.set_xlim((0,0.25*max_fourierfreq_plot))
     # Show FFT over 0-10 Hz in second sub-panel.
     ax23 = plt.subplot(gs2[3])
-    ax23.plot(fourier_freqs, power_spectrum)
+    ax23.plot(fourier_freqs, power_spectrum,color='k')
     ax23.set_xlim((0,10))
     ax23.set_xlabel('Fourier frequency (Hz)',fontsize=14)
 
     # Indicate special fourier frequencies in all FFT panels.
     for i in range(len(special_fourierfreq)):
         freq = special_fourierfreq[i]
-        ax20.axvline(x=freq,linestyle='--')
-        ax21.axvline(x=freq,linestyle='--')
-        ax22.axvline(x=freq,linestyle='--')
-        ax23.axvline(x=freq,linestyle='--') 
+        ax20.axvline(x=freq,linestyle='--',color='grey')
+        ax21.axvline(x=freq,linestyle='--',color='grey')
+        ax22.axvline(x=freq,linestyle='--',color='grey')
+        ax23.axvline(x=freq,linestyle='--',color='grey')
 
     fig.text(0.03, 0.4, 'Power spectrum (%s)'% (powerspec_unit), va='center', rotation='vertical',fontsize=14)
     fig.subplots_adjust(left=0.1, right=0.92, bottom=0.1,top=0.9)
