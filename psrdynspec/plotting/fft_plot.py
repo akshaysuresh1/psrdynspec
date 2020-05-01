@@ -73,13 +73,15 @@ def fft_gridplot(times, timeseries, fourier_freqs, power_spectrum, max_fourierfr
         plot_name = plot_name = basename+'_noisemasked_FFTgrid'+plot_format
         ax1.plot(times, timeseries.data,color='k')
         ax1.axhline(y=np.min(timeseries),linestyle='--',color='orange')
+        ax1.set_ylim((np.min(timeseries.data),2*np.max(timeseries.data)))
     else:
         ax1.plot(times, timeseries,color='k')
+        ax1.set_ylim((np.min(timeseries),2*np.max(timeseries)))
     ax1.annotate(radiofreq_annotation, xy=(0.05,0.8), xycoords='axes fraction',fontsize=14)
     ax1.annotate('DM = %.1f pc cm$^{-3}$'% (DM), xy=(0.7,0.8), xycoords='axes fraction',fontsize=14)
     ax1.set_xlabel('Time (s)', fontsize=14)
     ax1.set_ylabel('Flux (%s)'% (timeseries_unit), fontsize=14)
-    ax1.set_ylim((np.min(timeseries),2*np.max(timeseries)))
+
 
     # Split bottom gridspec into 4 sub-panels for plotting FFT over different ranges of fourier frequency.
     gs2 = gridspec.GridSpecFromSubplotSpec(4, 1, subplot_spec = outer[1],hspace=0.3)
