@@ -69,10 +69,12 @@ def fft_gridplot(times, timeseries, fourier_freqs, power_spectrum, max_fourierfr
     # Plot timeseries in top gridspec.
     gs1 = gridspec.GridSpecFromSubplotSpec(1, 1, subplot_spec = outer[0])
     ax1 = plt.subplot(gs1[0])
-    ax1.plot(times, timeseries,color='k')
     if np.ma.is_masked(timeseries):
         plot_name = plot_name = basename+'_noisemasked_FFTgrid'+plot_format
-        ax1.axhline(y=np.min(timeseries),linestyle='--',color='orange')    
+        ax1.plot(times, timeseries.data,color='k')
+        ax1.axhline(y=np.min(timeseries),linestyle='--',color='orange')
+    else:
+        ax1.plot(times, timeseries,color='k')
     ax1.annotate(radiofreq_annotation, xy=(0.05,0.8), xycoords='axes fraction',fontsize=14)
     ax1.annotate('DM = %.1f pc cm$^{-3}$'% (DM), xy=(0.7,0.8), xycoords='axes fraction',fontsize=14)
     ax1.set_xlabel('Time (s)', fontsize=14)
