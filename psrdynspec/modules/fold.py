@@ -121,7 +121,7 @@ Inputs:
 profile = Folded pulse profile
 '''
 def calc_reduced_chisquare_profile(profile):
-    profile_without_outliers = sigma_clip(profile, sigma=3.0, cenfunc='median', stdfunc='std', maxiters=5)
+    profile_without_outliers = sigma_clip(profile, sigma=5.0, cenfunc='median', stdfunc='std', maxiters=3)
     std_offpulse = np.std(profile_without_outliers)
     med = np.ma.median(profile_without_outliers)
     reduced_chisquare = np.mean((profile-med)**2)/(std_offpulse**2)
