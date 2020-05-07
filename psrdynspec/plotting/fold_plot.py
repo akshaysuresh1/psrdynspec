@@ -116,6 +116,7 @@ normalization = Pulse normalization factor (float) to aid plotting (default = 'q
 def plot_foldedprofile_rotations(profile_rotations,counts_perrot_phibin,phibins,basename,SAVE_DIR,show_plot = False,low_phase_limit=0.0,high_phase_limit=1.0,rot_spacing = 1.0, normalization = 'quarterrotmax'):
     N_rotations = len(profile_rotations)
     plot_name = basename+'_folded_rotations.png'
+    scale_fig_factor = N_rotations/100
 
     # Scale pulse profiles across all rotations by this factor to aid plotting.
     if (normalization=='quarterrotmax'):
@@ -123,24 +124,26 @@ def plot_foldedprofile_rotations(profile_rotations,counts_perrot_phibin,phibins,
     else:
         rot_scaling_factor = normalization
 
-    fig,axes = plt.subplots(nrows=2,ncols=1,sharex=True,gridspec_kw={'height_ratios': [1, 2]},figsize=(6,7.2))
+    fig,axes = plt.subplots(nrows=2,ncols=1,sharex=True,gridspec_kw={'height_ratios': [1, 4]},figsize=(6,scale_fig_factor+7.2))
     integrated_profile = np.nansum(profile_rotations*counts_perrot_phibin,axis=0)/np.nansum(counts_perrot_phibin,axis=0)
-    axes[0].plot(phibins,integrated_profile,'-k')
+    axes[0].plot(phibins,integrated_profile,'-k',linewidth=1)
     axes[0].set_ylabel('Flux (arbitrary units)',fontsize=14)
+
     profile_rotations = profile_rotations*rot_scaling_factor
     for i in range(N_rotations):
-        axes[1].plot(phibins,rot_spacing*i+profile_rotations[i],'-k',linewidth=1)
+        axes[1].plot(phibins,rot_spacing*i+profile_rotations[i],linestyle='-',color='black',linewidth=0.4)
+    ymax = np.nanmax(rot_spacing*np.arange(N_rotations)[:,None]+profile_rotations)
     axes[1].set_xlabel('Phase',fontsize=14)
     axes[1].set_ylabel('Rotations',fontsize=14)
     axes[1].set_xlim((low_phase_limit,high_phase_limit))
-    axes[1].set_ylim((0,np.ceil(N_rotations*rot_spacing/10)*10))
+    axes[1].set_ylim((0,ymax))
     # Adjust y-axis ticklabels if more spacing between profiles per rotation is desired.
     if (rot_spacing!=1):
-        yticklabels = np.arange(0,np.ceil(N_rotations/10)*10+1,10)
+        yticklabels = np.arange(0,np.ceil(ymax/10)*10+1,10)
         yticks = yticklabels*rot_spacing
         axes[1].set_yticks(yticks)
         axes[1].set_yticklabels(yticklabels)
-    fig.subplots_adjust(hspace=0.075)
+    fig.subplots_adjust(hspace=0.03,left=0.11,bottom=0.05,right=0.94,top=0.96)
     plt.savefig(SAVE_DIR+plot_name)
     if (show_plot==True):
         plt.show()
