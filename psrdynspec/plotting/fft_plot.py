@@ -70,7 +70,6 @@ def fft_gridplot(times, timeseries, fourier_freqs, power_spectrum, max_fourierfr
     gs1 = gridspec.GridSpecFromSubplotSpec(1, 1, subplot_spec = outer[0])
     ax1 = plt.subplot(gs1[0])
     if np.ma.is_masked(timeseries):
-        plot_name = plot_name = basename+'_noisemasked_FFTgrid'+plot_format
         ax1.plot(times, timeseries.data,color='k')
         ax1.axhline(y=np.min(timeseries),linestyle='--',color='orange')
         ax1.set_ylim((np.min(timeseries.data),2*np.max(timeseries.data)))
