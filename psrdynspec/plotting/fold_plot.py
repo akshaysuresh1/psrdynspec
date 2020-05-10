@@ -105,6 +105,7 @@ Inputs:
 profile_rotations = Folded pulse profile for every rotation (2D array = (rotation number, phase bin))
 counts_perrot_phibin = Counts per rotation per phase bin (2D array = (rotation number, phase bin))
 phibins = Phase bins (1D array)
+folding_period = Period (s) used to fold timeseries
 basename = Basename of output plot
 SAVE_DIR = Path to which plot must be saved
 show_plot = Do you want to show the plot live? (True/False) (default = False)
@@ -113,7 +114,7 @@ high_phase_limit = Upper limit to phase axis for plotting (default = 1.0)
 rot_spacing = Spacing between consecutive rotations on y-axis of plot (default = 1.0)
 normalization = Pulse normalization factor (float) to aid plotting (default = 'quarterrotmax', i.e., (0.25*(Total no.of rotations)/ global pulse max) )
 '''
-def plot_foldedprofile_rotations(profile_rotations,counts_perrot_phibin,phibins,basename,SAVE_DIR,show_plot = False,low_phase_limit=0.0,high_phase_limit=1.0,rot_spacing = 1.0, normalization = 'quarterrotmax'):
+def plot_foldedprofile_rotations(profile_rotations,counts_perrot_phibin,phibins,folding_period,basename,SAVE_DIR,show_plot = False,low_phase_limit=0.0,high_phase_limit=1.0,rot_spacing = 1.0, normalization = 'quarterrotmax'):
     N_rotations = len(profile_rotations)
     plot_name = basename+'_folded_rotations.png'
     scale_fig_factor = N_rotations/100
@@ -127,6 +128,7 @@ def plot_foldedprofile_rotations(profile_rotations,counts_perrot_phibin,phibins,
     fig,axes = plt.subplots(nrows=2,ncols=1,sharex=True,gridspec_kw={'height_ratios': [1, 4]},figsize=(6,scale_fig_factor+7.2))
     integrated_profile = np.nansum(profile_rotations*counts_perrot_phibin,axis=0)/np.nansum(counts_perrot_phibin,axis=0)
     axes[0].plot(phibins,integrated_profile,'-k',linewidth=1)
+    axes[0].annotate('P$_{\mathrm{opt}}$ = %.5f s'% (folding_period), xycoords='axes fraction',xy=(0.77,0.91),fontsize=14)
     axes[0].set_ylabel('Flux (arbitrary units)',fontsize=14)
 
     profile_rotations = profile_rotations*rot_scaling_factor
