@@ -128,7 +128,7 @@ def plot_foldedprofile_rotations(profile_rotations,counts_perrot_phibin,phibins,
     fig,axes = plt.subplots(nrows=2,ncols=1,sharex=True,gridspec_kw={'height_ratios': [1, 4]},figsize=(6,scale_fig_factor+7.2))
     integrated_profile = np.nansum(profile_rotations*counts_perrot_phibin,axis=0)/np.nansum(counts_perrot_phibin,axis=0)
     axes[0].plot(phibins,integrated_profile,'-k',linewidth=1)
-    axes[0].annotate('P$_{\mathrm{opt}}$ = %.5f s'% (folding_period), xycoords='axes fraction',xy=(0.77,0.91),fontsize=14)
+    axes[0].annotate('P$_{\mathrm{opt}}$ = %.5f s'% (folding_period), xycoords='axes fraction',xy=(0.71,0.84),fontsize=14)
     axes[0].set_ylabel('Flux (arbitrary units)',fontsize=14)
 
     profile_rotations = profile_rotations*rot_scaling_factor
