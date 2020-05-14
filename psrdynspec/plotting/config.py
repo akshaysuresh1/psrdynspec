@@ -2,23 +2,31 @@
 from sys import platform
 import matplotlib as mpl
 
-# Set default backgrounds for plotting in screen/tmux without an X-window.
 if platform=='darwin': # MacOS
-    screen_backend = 'Agg'
-    interactive_backend = 'MacOSX'
+    noninteractive_backend = 'Agg' # Set default backgrounds for non-interactive plotting on screen/tmux.
+    ipython_shell_backend = 'MacOSX'
 else:
-    screen_backend = 'Agg'
-    interactive_backend = 'Qt5Agg'
+    noninteractive_backend = 'Agg' # Set default backgrounds for non-interactive plotting on screen/tmux.
+    ipython_shell_backend = 'Qt5Agg'
 
-# If scripts are run from ipython, use interactive backend. Otherwise, use backends that do not require an X-window.
+# If scripts are run from ipython, use interactive backend. Otherwise, use non-interactive backends.
+# Use 'nbAgg' backend when run within a Jupyter notebook.
 try:
     __IPYTHON__
 except NameError:
-    print("Not in IPython. Setting matplotlib backend to %s."% (screen_backend))
-    mpl.use(screen_backend)
+    print("Enabling non-interactive plotting. Setting matplotlib backend to %s."% (screen_backend))
+    mpl.use(noninteractive_backend)
 else:
-    print("In IPython. Using %s backend for plotting"% (interactive_backend))
-    mpl.use(interactive_backend)
+    ipython_class = get_ipython().__class__.__name__
+    if ipython_class=='TerminalInteractiveShell':
+        print("In Ipython shell. Using %s backend for plotting"% (ipython_shell_backend))
+        mpl.use(ipython_shell_backend)
+    elif ipython_class=='ZMQInteractiveShell':
+        print("In Jupyter notebook. Using ngAgg backend for plotting")
+        mpl.use('nbAgg')
+    else:
+        print("Enabling non-interactive plotting. Setting matplotlib backend to %s."% (screen_backend))
+        mpl.use(noninteractive_backend)
 
 # Enable use of LaTeX labels in plots.
 mpl.rcParams['text.usetex'] = True
