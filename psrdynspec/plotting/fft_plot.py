@@ -103,12 +103,13 @@ def fft_gridplot(times, timeseries, fourier_freqs, power_spectrum, max_fourierfr
     ax23.set_xlabel('Fourier frequency (Hz)',fontsize=14)
 
     # Indicate special fourier frequencies in all FFT panels.
-    for i in range(len(special_fourierfreq)):
-        freq = special_fourierfreq[i]
-        ax20.axvline(x=freq,linestyle='--',color='grey')
-        ax21.axvline(x=freq,linestyle='--',color='grey')
-        ax22.axvline(x=freq,linestyle='--',color='grey')
-        ax23.axvline(x=freq,linestyle='--',color='grey')
+    if special_fourierfreq is not None:
+        for i in range(len(special_fourierfreq)):
+            freq = special_fourierfreq[i]
+            ax20.axvline(x=freq,linestyle='--',color='grey')
+            ax21.axvline(x=freq,linestyle='--',color='grey')
+            ax22.axvline(x=freq,linestyle='--',color='grey')
+            ax23.axvline(x=freq,linestyle='--',color='grey')
 
     fig.text(0.03, 0.4, 'Power spectrum (%s)'% (powerspec_unit), va='center', rotation='vertical',fontsize=14)
     fig.subplots_adjust(left=0.1, right=0.92, bottom=0.1,top=0.9)
