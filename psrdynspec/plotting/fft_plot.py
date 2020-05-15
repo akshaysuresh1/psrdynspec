@@ -77,7 +77,8 @@ def fft_gridplot(times, timeseries, fourier_freqs, power_spectrum, max_fourierfr
         ax1.plot(times, timeseries,color='k')
         ax1.set_ylim((np.min(timeseries),2*np.max(timeseries)))
     ax1.annotate(radiofreq_annotation, xy=(0.05,0.8), xycoords='axes fraction',fontsize=14)
-    ax1.annotate('DM = %.1f pc cm$^{-3}$'% (DM), xy=(0.7,0.8), xycoords='axes fraction',fontsize=14)
+    if isinstance(DM, float) or isinstance(DM,int):
+        ax1.annotate('DM = %.1f pc cm$^{-3}$'% (DM), xy=(0.7,0.8), xycoords='axes fraction',fontsize=14)
     ax1.set_xlabel('Time (s)', fontsize=14)
     ax1.set_ylabel('Flux (%s)'% (timeseries_unit), fontsize=14)
 
