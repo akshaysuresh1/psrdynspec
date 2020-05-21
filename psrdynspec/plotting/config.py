@@ -14,7 +14,7 @@ else:
 try:
     __IPYTHON__
 except NameError:
-    print("Enabling non-interactive plotting. Setting matplotlib backend to %s."% (screen_backend))
+    print("Enabling non-interactive plotting. Setting matplotlib backend to %s."% (noninteractive_backend))
     mpl.use(noninteractive_backend)
 else:
     ipython_class = get_ipython().__class__.__name__
@@ -25,7 +25,7 @@ else:
         print("In Jupyter notebook. Using ngAgg backend for plotting")
         mpl.use('nbAgg')
     else:
-        print("Enabling non-interactive plotting. Setting matplotlib backend to %s."% (screen_backend))
+        print("Enabling non-interactive plotting. Setting matplotlib backend to %s."% (noninteractive_backend))
         mpl.use(noninteractive_backend)
 
 # Enable use of LaTeX labels in plots.
