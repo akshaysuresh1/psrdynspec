@@ -76,7 +76,7 @@ def select_metric_function(metric):
     elif (metric=='profSNR'):
         metric_function = calc_sn
     else:
-        print('Chosen metric not recognized.')
+        raise Exception('Chosen metric not recognized.')
         return None
     return metric_function
 ##########################################################################
