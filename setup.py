@@ -26,10 +26,13 @@ setup(name='psrdynspec',
       long_description_content_type="text/markdown",
       url='https://github.com/sakshay721/psrdynspec',
       install_requires=install_requires,
-      packages=find_packages()
+      packages=find_packages(),
+      license='BSD 3-Clause License',
       classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent",
+        "Operating System :: Unix",  
+        "Operating System :: MacOS :: MacOS X",
+        "License :: OSI Approved :: BSD 3-Clause License",      
+        "Topic :: Scientific/Engineering :: Astronomy"
       ]
 )
