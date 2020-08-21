@@ -1,7 +1,7 @@
 # Define 'infodata' class to read and write information from PRESTO .inf files.
 
 '''
-The following script is copied verbatim from PRESTO (https://github.com/scottransom/presto/blob/master/python/presto/infodata.py) under the following license.
+The following script is adapted from PRESTO (https://github.com/scottransom/presto/blob/master/python/presto/infodata.py) under the following license.
 
 GNU General Public License
 Version 2, June 1991
@@ -27,7 +27,7 @@ class infodata(object):
         self.breaks = 0
         for line in open(filenm):
             if line.startswith(" Data file name"):
-                self.basenm = line.split("=")[-1].strip()
+                self.basename = line.split("=")[-1].strip()
                 continue
             if line.startswith(" Telescope"):
                 self.telescope = line.split("=")[-1].strip()
@@ -99,9 +99,9 @@ class infodata(object):
             raise ValueError("PRESTO info files must end with '.inf'. "
                              "Got: %s" % inffn)
         with open(inffn, 'w') as ff:
-            if hasattr(self, 'basenm'):
+            if hasattr(self, 'basename'):
                 ff.write(" Data file name without suffix          =  %s\n" %
-                         self.basenm)
+                         self.basename)
             if hasattr(self, 'telescope'):
                 ff.write(" Telescope used                         =  %s\n" %
                          self.telescope)
@@ -164,4 +164,45 @@ class infodata(object):
             ff.write(" Any additional notes:\n")
             if notes is not None:
                 ff.write("    %s\n" % notes.strip())
+
+    # Print attributes of an infodata object.
+    def __str__(self):
+        # Check if the timeseries contains any breaks.
+        if hasattr(self, 'onoff'):
+            breaks_line = ["Any breaks in the data? (1 yes, 0 no)  =  1"]
+            for ii, (on, off) in enumerate(self.onoff, 1):
+                onoff_description = "On/Off bin pair #%3d                   =  %-11.0f, %-11.0f" % (ii, on, off)
+                breaks_line.append(onoff_description)
+            breaks_line = '\n'.join(breaks_line)
+        else:
+            breaks_line = "Any breaks in the data? (1 yes, 0 no)  =  0"
+        # Print output lines following the same structure as the .inf file content.
+        lines = [
+        "Data file name without suffix          =  %s% (self.basename),
+        "Telescope used                         =  %s"% (self.telescope),
+        "Instrument used                        =  %s"% (self.instrument),
+        "Object being observed                  =  %s"% (self.object),
+        "J2000 Right Ascension (hh:mm:ss.ssss)  =  %s"% (self.RA),
+        "J2000 Declination     (dd:mm:ss.ssss)  =  %s"% (self.DEC),
+        "Data observed by                       =  %s"% (self.observer),
+        "Epoch of observation (MJD)             =  %05.15f"% (self.epoch),
+        "Barycentered?           (1=yes, 0=no)  =  %d"% (self.bary),
+        "Number of bins in the time series      =  %-11.0f"% (self.N),
+        "Width of each time series bin (usec)   =  %.15g"% (self.dt*1e6),
+        breaks_line,
+        "Type of observation (EM band)          =  %s"% (self.waveband),
+        "Beam diameter (arcsec)                 =  %s"% (self.beam_diam),
+        "Dispersion measure (pc/cc)             =  %.12g"% (self.DM),
+        "Central freq of low channel (MHz)      =  %.12g"% (self.lofreq),
+        "Total bandwidth (MHz)                  =  %.12g"% (self.BW),
+        "Number of channels                     =  %d"% (self.numchan),
+        "Channel bandwidth (MHz)                =  %.12g"% (self.chan_width),
+        "Data analyzed by                       =  %s"% (self.analyzer)
+        ]
+        return '\n'.join(lines)
+
+    # Object representation
+    def __repr__(self):
+        __str__(self)
+
 ##############################################################################
