@@ -199,7 +199,8 @@ class infodata(object):
         "Channel bandwidth (MHz)                =  %.12g"% (self.chan_width),
         "Data analyzed by                       =  %s"% (self.analyzer)
         ]
-        return '\n'.join(lines)
+        output = '\n'.join(lines)
+        return output
 
     # Object representation
     def __repr__(self):
