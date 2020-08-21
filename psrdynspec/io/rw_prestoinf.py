@@ -178,7 +178,7 @@ class infodata(object):
             breaks_line = "Any breaks in the data? (1 yes, 0 no)  =  0"
         # Print output lines following the same structure as the .inf file content.
         lines = [
-        "Data file name without suffix          =  %s% (self.basename),
+        "Data file name without suffix          =  %s"% (self.basename),
         "Telescope used                         =  %s"% (self.telescope),
         "Instrument used                        =  %s"% (self.instrument),
         "Object being observed                  =  %s"% (self.object),
