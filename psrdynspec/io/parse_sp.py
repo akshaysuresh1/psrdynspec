@@ -11,10 +11,10 @@ file_name = Name of input .singlepulse file to read (include path to file if not
 def read_singlepulse(file_name):
     column_names = ['DM','Sigma','Time','Sample','Downfact'] # Column names in a .singlepulse file
     df = pd.read_csv(file_name,sep=r"\s+",header=None,names=column_names,comment='#')
-    DMs = np.array(df['DM']) # DMs of single pulse candidates
-    sigma = np.array(df['Sigma']) # Significance of single pulse candidate detections
-    times = np.array(df['Time']) # Times at which single pulse candidates are found in the dedispersed time series
-    samples = np.array(df['Sample']) # Sample numbers of candidates in dedispersed time series
+    DMs = np.array(df['DM'],dtype='float64') # DMs of single pulse candidates
+    sigma = np.array(df['Sigma'],dtype='float64') # Significance of single pulse candidate detections
+    times = np.array(df['Time'],dtype='float64') # Times at which single pulse candidates are found in the dedispersed time series
+    samples = np.array(df['Sample'],dtype='int') # Sample numbers of candidates in dedispersed time series
     return DMs,sigma,times,samples
 #########################################################################
 # Apply a S/N cutoff to extracted candidates.
