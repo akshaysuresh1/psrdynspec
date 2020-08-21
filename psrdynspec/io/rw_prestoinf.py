@@ -204,6 +204,6 @@ class infodata(object):
 
     # Object representation
     def __repr__(self):
-        str(self)
+        return str(self)
 
 ##############################################################################
