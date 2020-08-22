@@ -65,16 +65,17 @@ cand_DMs = 1D array of DMs (pc/cc) of single pulse candidates
 cand_sigma = 1D array of detection S/N of single pulse candidates
 metadata = infodata object containing observation metadata
 SAVE_DIR = Path to which output plot must be saved (d: working directory)
+output_formats = List of file extensions for output plot (d: ['.png'])
 show_plot = Do you want to show the plot live? (True/False) (default = False)
 low_DM_cand = Min. DM (pc/cc) to plot (d: np.min(cand_DMs))
 high_DM_cand = Max DM (pc/cc) to plot (d: np.max(cand_DMs))
 '''
-def plot_DMtime(cand_dedisp_times, cand_DMs, cand_sigma, metadata, SAVE_DIR='', show_plot=False, low_DM_cand=None, high_DM_cand=None):
+def plot_DMtime(cand_dedisp_times, cand_DMs, cand_sigma, metadata, SAVE_DIR='', output_formats=['.png'], show_plot=False, low_DM_cand=None, high_DM_cand=None):
     if low_DM_cand is None:
         low_DM_cand = np.min(cand_DMs)
     if high_DM_cand is None:
         high_DM_cand = np.min(cand_DMs)
-    center_freq = metadata.lofreq + 0.5*(metadata.numchan-1)*metadata.chan_width # MHz    
+    center_freq = metadata.lofreq + 0.5*(metadata.numchan-1)*metadata.chan_width # MHz
 
     plot_name = metadata.basename
     if '/' in plot_name:
@@ -142,7 +143,8 @@ def plot_DMtime(cand_dedisp_times, cand_DMs, cand_sigma, metadata, SAVE_DIR='', 
     ax02.annotate('Freq$_{\mathrm{ctr}}$ = %.1f MHz'% (center_freq),xy=(0.0, 1.1),xycoords='axes fraction',fontsize=14)
 
     # Save plot and display it live, if specified.
-    plt.savefig(SAVE_DIR+plot_name+'_DMtime.png')
+    for format in output_format:
+        plt.savefig(SAVE_DIR+plot_name+'_DMtime'+format)
     if show_plot:
         plt.show()
     else:
