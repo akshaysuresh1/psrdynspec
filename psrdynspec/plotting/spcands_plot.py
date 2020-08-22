@@ -1,4 +1,5 @@
 from .config import *
+import matplotlib.gridspec as gridspec
 
 # Plots saved to disk by default. Plots displayed on live window only if show_plot==True.
 #########################################################################
@@ -144,5 +145,5 @@ def plot_DMtime(cand_dedisp_times, cand_DMs, cand_sigma, metadata, SAVE_DIR='', 
     if show_plot:
         plt.show()
     else:
-        plt.close()    
+        plt.close()
 #########################################################################
