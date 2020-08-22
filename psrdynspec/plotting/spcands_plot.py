@@ -74,6 +74,7 @@ def plot_DMtime(cand_dedisp_times, cand_DMs, cand_sigma, metadata, SAVE_DIR='', 
         low_DM_cand = np.min(cand_DMs)
     if high_DM_cand is None:
         high_DM_cand = np.min(cand_DMs)
+    center_freq = metadata.lofreq + 0.5*(metadata.numchan-1)*metadata.chan_width # MHz    
 
     plot_name = metadata.basename
     if '/' in plot_name:
