@@ -77,11 +77,9 @@ def remove_duplicates(cand_DMs,cand_sigma,cand_dedisp_times,cand_dedisp_samples,
 Inputs:
 low_DM = Lowest DM (pc/cc) of interest
 high_DM = Largest DM (pc/cc) of interest. Extracted single pulse candidates are identified at DMs between low_DM and high_DM (including endpoints).
-glob_singlepulse = Glob search string to parse .singlepulse files
-SINGLEPULSE_DIR = Path to .singlepulse files.
+file_list = List of .singlepulse files to read
 '''
-def gen_singlepulse(low_DM,high_DM,glob_singlepulse,SINGLEPULSE_DIR):
-    file_list = sorted(glob.glob(SINGLEPULSE_DIR+glob_singlepulse))
+def gen_singlepulse(low_DM,high_DM, file_list):
     file_DMs = np.array([float(file_name.split('DM')[-1].split('.singlepulse')[0]) for file_name in file_list])
 
     print('Collating details of candidate single pulses...')
