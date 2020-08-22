@@ -143,7 +143,7 @@ def plot_DMtime(cand_dedisp_times, cand_DMs, cand_sigma, metadata, SAVE_DIR='', 
     ax02.annotate('Freq$_{\mathrm{ctr}}$ = %.1f MHz'% (center_freq),xy=(0.0, 1.1),xycoords='axes fraction',fontsize=14)
 
     # Save plot and display it live, if specified.
-    for format in output_format:
+    for format in output_formats:
         plt.savefig(SAVE_DIR+plot_name+'_DMtime'+format)
     if show_plot:
         plt.show()
