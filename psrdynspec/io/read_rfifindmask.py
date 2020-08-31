@@ -5,22 +5,21 @@ import numpy as np
 '''
 Inputs:
 mask_file = Name of rfifind mask together with its .mask extension
-MASK_DIR = Path to mask_file
 
 Returns:
-times = 1D array of times (s) post integration for computation of stats by rfifind
+nint = No. of integrations
+int_times = 1D array of times (s) post integration for computation of stats by rfifind
 ptsperint = No. of time samples per integration
 mask_zap_chans = 1D array of entire channels to mask
 mask_zap_ints = 1D array of entire time integrations to mask
 mask_zap_chans_per_int = Set of channels to mask for each time integration.
 '''
-def read_rfimask(mask_file, MASK_DIR):
-    x = open(MASK_DIR + mask_file)
+def read_rfimask(mask_file):
+    x = open(mask_file)
     time_sig, freq_sig, MJD, dtint, lofreq, df = np.fromfile(x, dtype=np.float64, count=6)
     nchan, nint, ptsperint = np.fromfile(x, dtype=np.int32, count=3)
     freqs = np.arange(nchan)*df + lofreq
-    times = np.arange(nint)*dtint
-    MJDs = times/86400.0 + MJD
+    int_times = np.arange(nint)*dtint
     nzap = np.fromfile(x, dtype=np.int32, count=1)[0]
     if nzap:
         mask_zap_chans = np.fromfile(x, dtype=np.int32, count=nzap)
@@ -47,5 +46,5 @@ def read_rfimask(mask_file, MASK_DIR):
     x.close()
     mask_zap_chans = np.array(list(mask_zap_chans))
     mask_zap_ints = np.array(list(mask_zap_ints))
-    return nint, times, ptsperint, mask_zap_chans, mask_zap_ints, mask_zap_chans_per_int
+    return nint, int_times, ptsperint, mask_zap_chans, mask_zap_ints, mask_zap_chans_per_int
 ############################################################################
