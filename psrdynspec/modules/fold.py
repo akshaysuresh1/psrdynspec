@@ -15,17 +15,19 @@ Nbins = No. of phase bins
 '''
 def fold_ts(timeseries, times, pfold, Nbins):
     phi = times/pfold % 1.0
-    phibins = np.linspace(0.,1.,Nbins)
-    indbins = np.digitize(phi,phibins,right=True) # Place phase values in phase bins. Returns indices of placement in phase bins array.
+    phibin_edges = np.linspace(0.,1.,Nbins+1) # Edges of phase bins
+    phibin_centers = 0.5*(phibin_edges[1:]+phibin_edges[:-1]) # Centers of phase bins
+    indbin_edges = np.digitize(phi,phibin_edges,right=True) # Place phase values in phase bins. Returns indices of placement in phase bins array.
+    # Given edges x < y, a phase bin is defined to be the range (x,y].
 
     # Arrays to store profile and counts per phase bin.
     profile = np.zeros(Nbins)
     counts = np.zeros(Nbins)
-    for n in range(Nbins):
-        profile[n] = np.sum(timeseries[np.where(indbins==n)]) # Sum up timeseries values that belong to one phase bin.
-        counts[n] = np.size(np.where(indbins==n)) # No. of counts in bin.
-    profile[1:] /= counts[1:] # Divide by the number of counts to generate an average profile.
-    return profile[1:], phibins[1:]
+    for n in range(1,Nbins+1):
+        profile[n] = np.sum(timeseries[np.where(indbin_edges==n)]) # Sum up time series flux values that fall in one phase bin.
+        counts[n] = np.size(np.where(indbin_edges==n)) # No. of counts in bin.
+    profile /= counts # Divide by the number of counts to generate an average profile.
+    return profile, phibin_centers
 ##########################################################################
 # Convert a long time series into number of rotations and phase bins based on a given rotation period.
 '''
