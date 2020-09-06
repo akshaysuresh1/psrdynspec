@@ -48,3 +48,18 @@ def read_rfimask(mask_file):
     mask_zap_ints = np.array(list(mask_zap_ints))
     return nint, int_times, ptsperint, mask_zap_chans, mask_zap_ints, mask_zap_chans_per_int
 ############################################################################
+# Modify a rfifind mask specification following bandpass edge clipping.
+'''
+Inputs:
+mask_zap_chans = 1D array of entire channels to mask
+mask_zap_chans_per_int = Set of channels to mask for each time integration.
+ind_band_low = Index of low frequency bandpass edge
+ind_band_high = Index of high frequency bandpass edge, allowed bandpass range is ind_band_low:ind_band_high
+'''
+def modify_zapchans_bandpass(mask_zap_chans, mask_zap_chans_per_int, ind_band_low, ind_band_high):
+    new_zap_chans = mask_zap_chans[np.where(np.logical_and(mask_zap_chans>=ind_band_low, mask_zap_chans<ind_band_high))[0]] - ind_band_low
+    new_zap_chans_per_int = []
+    for i in range(len(mask_zap_chans_per_int)):
+        new_zap_chans_per_int.append(mask_zap_chans_per_int[i][np.where(np.logical_and(mask_zap_chans_per_int[i]>=ind_band_low, mask_zap_chans_per_int[i]<ind_band_high))[0]] - ind_band_low)
+    return new_zap_chans, new_zap_chans_per_int
+############################################################################
