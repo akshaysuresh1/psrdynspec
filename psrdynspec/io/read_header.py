@@ -12,6 +12,7 @@ class Header(object):
         file_list = sorted(glob.glob(glob_file_string))
         N_files = len(file_list)
         self.ntsamples = 0
+        self.file_type = file_type  # File type
 
         if (file_type=='filterbank'):
             for i in range(N_files):
@@ -45,4 +46,24 @@ class Header(object):
             self.chan_bw = self.subint['CHAN_BW'] # Channel bandwidth (MHz)
             self.nchans = self.primary['OBSNCHAN'] # No. of channels
             self.npol = self.subint['NPOL'] # No. of polarizations
+
+    # Print attributes of a Header object.
+    def __str__(self):
+        lines = [
+        "File type                 =  %s"% (self.file_type),
+        "Sampling time (ms)        =  %.5g"% (self.t_samp*1e3),
+        "No. of time samples       =  %d"% (self.ntsamples),
+        "Total time (s)            =  %.5g"% (self.tot_time),
+        "Channel bandwidth (MHz)   =  %.5g"% (self.chan_bw),
+        "No. of spectral channels  =  %d"% (self.nchans),
+        "Start frequency (MHz)     =  %.5g"% (self.fch1),
+        "No. of polarizations      =  %d"% (self.npol),
+
+        ]
+        output = '\n'.join(lines)
+        return output
+
+    # Object representation
+    def __repr__(self):
+        return str(self)
 ###################################################
