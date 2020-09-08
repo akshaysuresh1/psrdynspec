@@ -30,13 +30,15 @@ Inputs:
 n_bytes = No. of bytes per pixel of the dynamic spectrum.
 '''
 def setup_dtype(n_bytes):
-    if n_bytes == 4:
-        return b'float32'
+    if n_bytes==8:
+        return 'float64'
+    elif n_bytes == 4:
+        return 'float32'
     elif n_bytes == 2:
-        return b'uint16'
+        return 'uint16'
     elif n_bytes == 1:
-        return b'uint8'
+        return 'uint8'
     else:
         print('Having trouble setting dtype, assuming float32.')
-        return b'float32'
+        return 'float32'
 ##############################################################
