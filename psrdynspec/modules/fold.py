@@ -24,8 +24,8 @@ def fold_ts(timeseries, times, pfold, Nbins):
     profile = np.zeros(Nbins)
     counts = np.zeros(Nbins)
     for n in range(1,Nbins+1):
-        profile[n] = np.sum(timeseries[np.where(indbin_edges==n)]) # Sum up time series flux values that fall in one phase bin.
-        counts[n] = np.size(np.where(indbin_edges==n)) # No. of counts in bin.
+        profile[n-1] = np.sum(timeseries[np.where(indbin_edges==n)]) # Sum up time series flux values that fall in one phase bin.
+        counts[n-1] = np.size(np.where(indbin_edges==n)) # No. of counts in bin.
     profile /= counts # Divide by the number of counts to generate an average profile.
     return profile, phibin_centers
 ##########################################################################
