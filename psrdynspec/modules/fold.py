@@ -43,27 +43,28 @@ def fold_rotations_ts(timeseries, times, pfold, Nbins):
     print('Total no. of rotations in data = %d'% (N_rotations))
 
     phi = times/pfold % 1.0
-    phibins = np.linspace(0.,1.,Nbins)
-    indbins = np.digitize(phi,phibins,right=True) # Place phase values in phase bins. Return indices of placement in phase bins array.
+    phibin_edges = np.linspace(0.,1.,Nbins+1)  # Edges of phase bins
+    phibin_centers = 0.5*(phibin_edges[1:]+phibin_edges[:-1]) # Centers of phase bins
+    indbin_edges = np.digitize(phi,phibin_edges,right=True) # Place phase values in phase bins. Return indices of placement in phase bins array.
 
-    profile_rotations = np.zeros((N_rotations,Nbins-1))
-    counts_perrot_phibin = np.zeros((N_rotations,Nbins-1)) # Counts per rotation per phase bin
+    profile_rotations = np.zeros((N_rotations,Nbins))
+    counts_perrot_phibin = np.zeros((N_rotations,Nbins)) # Counts per rotation per phase bin
     for i in range(N_rotations):
         print ('Processing rotation %d'% (i))
         data_indices = np.where(rotations==i)[0] # Indices in the timeseries that belong to rotation i
         data_rotation = timeseries[data_indices] # Time series for rotation i
-        phase_bin_indices = indbins[data_indices] # Phase bin indices for data elements in rotation i
+        phase_bin_indices = indbin_edges[data_indices] # Phase bin indices for data elements in rotation i
 
         profile = np.zeros(Nbins)
         counts = np.zeros(Nbins)
-        for n in range(Nbins):
-            profile[n] = np.sum(data_rotation[np.where(phase_bin_indices==n)]) # Sum up timeseries values that belong to one phase bin.
-            counts[n] = np.size(np.where(phase_bin_indices==n)) # No. of counts in bin.
-        profile[1:] /= counts[1:] # Divide by the number of counts to generate an average profile.
-        profile_rotations[i] = profile[1:]
-        counts_perrot_phibin[i] = counts[1:]
+        for n in range(1,Nbins+1):
+            profile[n-1] = np.sum(data_rotation[np.where(phase_bin_indices==n)]) # Sum up timeseries values that belong to one phase bin.
+            counts[n-1] = np.size(np.where(phase_bin_indices==n)) # No. of counts in bin.
+        profile /= counts # Divide by the number of counts to generate an average profile.
+        profile_rotations[i] = profile
+        counts_perrot_phibin[i] = counts
     #profile_rotations -= np.nanmedian(profile_rotations.flatten())# Set baseline flux to zero.
-    return profile_rotations, counts_perrot_phibin, phibins[1:]
+    return profile_rotations, counts_perrot_phibin, phibin_centers
 ##########################################################################
 # Select the metric function corresponding to specified metric string.
 '''
