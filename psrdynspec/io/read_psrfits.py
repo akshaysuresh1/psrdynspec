@@ -1,18 +1,20 @@
 # Load data from list of PSRFITS files.
 
 from astropy.io import fits
-import glob
 import numpy as np
+import sys
 #################################################
 # Extract data from PSRFITS file.
 '''
 Inputs:
-glob_fits_files = Glob string to parse .fits files
+file_list = List of .fits files
 FITS_DIR = Path to .fits files
 pol = List of polarization indices to extract (default = [0])
 '''
-def load_psrfits_data(glob_fits_files,FITS_DIR,pol=[0]):
-    file_list = sorted(glob.glob(FITS_DIR+glob_fits_files))
+def load_psrfits_data(file_list,FITS_DIR,pol=[0]):
+    if len(file_list)==0:
+        print('PSRFITS file list is empty. Quitting.')
+        sys.exit(1)
     for i in range(len(file_list)):
         file_name = file_list[i].split('/')[-1]
         print('Reading in data from %s'% (file_name))
