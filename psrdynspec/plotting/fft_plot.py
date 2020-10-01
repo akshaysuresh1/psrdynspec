@@ -10,13 +10,12 @@ fourierfreqs = 1D array of Fourier frequencies
 powerspec = 1D array of power spectra values
 fourierfreq_units = Units of Fourier frequency (Hz, kHz, MHz, etc..)
 powerspec_units = Units of the power spectrum
-basename = Basename of output plot
-SAVE_DIR = Path to which plot must be saved
+basename = Basename of output plot (including path)
 show_plot = Do you want to show the plot? (True/False) (default = False)
 axes_format = 'linear' / 'loglog' / 'semilogx'/'semilogy' (default = 'linear')
 positive_freqs_only = Plot only the positive frequencies? (True/False) (default = False)
 '''
-def plot_FFT1d(fourierfreqs,powerspec,fourierfreq_units,powerspec_units,basename,SAVE_DIR,show_plot=False,axes_format='linear',positive_freqs_only=False):
+def plot_FFT1d(fourierfreqs,powerspec,fourierfreq_units,powerspec_units,basename,show_plot=False,axes_format='linear',positive_freqs_only=False):
     if (positive_freqs_only==True):
         pos_indices = np.where(fourierfreqs>0)[0]
         fourierfreqs = fourierfreqs[pos_indices]
@@ -35,7 +34,7 @@ def plot_FFT1d(fourierfreqs,powerspec,fourierfreq_units,powerspec_units,basename
         plt.plot(fourierfreqs,powerspec)
     plt.xlabel('Frequency (%s)'% (fourierfreq_units),fontsize=14)
     plt.ylabel('Spectral power density (%s)'% (powerspec_units),fontsize=14)
-    plt.savefig(SAVE_DIR+plot_name)
+    plt.savefig(plot_name)
     if (show_plot==True):
         plt.show()
     else:
@@ -54,12 +53,11 @@ powerspec_unit = Unit of power spectrum measurement
 DM = Dispersion measure (pc/cc) used to dedisperse the time series
 radiofreq_annotation = String to indicate radio frequencies integrated to produce plotted timeseries
 special_fourierfreq = 1D array of specific frequencies (Hz) to indicate via vertical dashed lines in FFT plot
-basename = Basename of output plot
-SAVE_DIR = Path to which plot must be saved
+basename = Basename of output plot (including path)
 show_plot = Do you want to show the plot? (True/False) (default = False)
 plot_format = Format of output plot E.g., '.png', '.eps', etc.
 '''
-def fft_gridplot(times, timeseries, fourier_freqs, power_spectrum, max_fourierfreq_plot, timeseries_unit, powerspec_unit, DM, radiofreq_annotation, special_fourierfreq, basename, SAVE_DIR, show_plot, plot_format):
+def fft_gridplot(times, timeseries, fourier_freqs, power_spectrum, max_fourierfreq_plot, timeseries_unit, powerspec_unit, DM, radiofreq_annotation, special_fourierfreq, basename, show_plot, plot_format):
     plot_name = basename+'_FFTgrid'+plot_format
     # Construct the gridspec framework for figure.
     fig = plt.figure(figsize=(8,8))
@@ -114,7 +112,7 @@ def fft_gridplot(times, timeseries, fourier_freqs, power_spectrum, max_fourierfr
 
     fig.text(0.03, 0.4, 'Power spectrum (%s)'% (powerspec_unit), va='center', rotation='vertical',fontsize=14)
     fig.subplots_adjust(left=0.1, right=0.92, bottom=0.1,top=0.9)
-    plt.savefig(SAVE_DIR+plot_name)
+    plt.savefig(plot_name)
     if (show_plot==True):
         plt.show()
     else:

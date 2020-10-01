@@ -9,17 +9,16 @@ freqs_GHz = 1D array of radio frequencies (usually GHz)
 bandpass = 1D array of bandpass fluxes
 freq_unit = String: Unit of radio frequency (GHz, MHz, kHz, etc.)
 flux_unit = String: Unit of flux density measurement
-basename = Basename of output plot (string)
-SAVE_DIR = Path to which output plots must be saved (string)
+basename = Basename of output plot (including path)
 show_plot = Do you want to show the plot live? (True/False) (default = False)
 '''
-def plot_bandpass(freqs_GHz,bandpass,freq_unit,flux_unit,basename,SAVE_DIR,show_plot=False):
+def plot_bandpass(freqs_GHz,bandpass,freq_unit,flux_unit,basename,show_plot=False):
     plot_name = basename+'_bandpass.png'
     print('Plotting bandpass shape as a function of radio frequency')
     plt.plot(freqs_GHz,bandpass)
     plt.xlabel('Radio frequency ('+freq_unit+')',fontsize=14)
     plt.ylabel('Flux density ('+flux_unit+')',fontsize=14)
-    plt.savefig(SAVE_DIR+plot_name)
+    plt.savefig(plot_name)
     if (show_plot==True):
         plt.show()
     else:
@@ -34,11 +33,10 @@ freqs_subband = List of 1D arrays of frequency values spanned by subbands, len(f
 bandpass_fit_subband = List of 1D arrays of bandpass fits performed independently over each subband
 freq_unit = String: Unit of radio frequency (GHz, MHz, kHz, etc.)
 flux_unit = String: Unit of flux density measurement
-basename = Basename of output plot (string)
-SAVE_DIR = Path to which output plots must be saved (string)
+basename = Basename of output plot (including path)
 show_plot = Do you want to show the plot live? (True/False) (default = False)
 '''
-def plot_bandpass_subbands(freqs_GHz,median_bp,freqs_subband,bandpass_fit_subband,freq_unit,flux_unit,basename,SAVE_DIR,show_plot=False):
+def plot_bandpass_subbands(freqs_GHz,median_bp,freqs_subband,bandpass_fit_subband,freq_unit,flux_unit,basename,show_plot=False):
     plot_name = basename+'_bandpass.png'
     print('Plotting median bandpass shape as a function of radio frequency')
     plt.plot(freqs_GHz,median_bp,color='b',alpha=0.4)
@@ -48,7 +46,7 @@ def plot_bandpass_subbands(freqs_GHz,median_bp,freqs_subband,bandpass_fit_subban
         plt.plot(freqs_subband[i],bandpass_fit_subband[i],color='r')
     plt.xlabel('Radio frequency ('+freq_unit+')',fontsize=14)
     plt.ylabel('Flux density ('+flux_unit+')',fontsize=14)
-    plt.savefig(SAVE_DIR+plot_name)
+    plt.savefig(plot_name)
     if (show_plot==True):
         plt.show()
     else:

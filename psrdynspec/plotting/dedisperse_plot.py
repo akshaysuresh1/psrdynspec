@@ -11,11 +11,10 @@ trial_DMs = 1D array of trial DMs (pc/cc) at which dedispersion must be performe
 SNR = 1D array of signal-to-noise ratios at above trial DMs
 optimal_DM = Optimal DM according to prescribed metric
 t_cand = Time (s) of occurrence of candidate
-basename = Basename (string) for output plot
-SAVE_DIR = Path to which S/N vs DM plots must be saved
+basename = Basename (string) for output plot (including path)
 show_plot = Do you want to show the plot live? (True/False) (default = False)
 '''
-def plot_SNRvsDM(trial_DMs,SNR,optimal_DM,t_cand,basename,SAVE_DIR,show_plot=False):
+def plot_SNRvsDM(trial_DMs,SNR,optimal_DM,t_cand,basename,show_plot=False):
     plot_name = basename+'_t'+'%07.3f'% (t_cand)+'_SNRvsDM.png'
     print('Plotting S/N vs. trial DM for candidate at t = %.3f s'% (t_cand))
     plt.plot(trial_DMs,SNR)
@@ -23,7 +22,7 @@ def plot_SNRvsDM(trial_DMs,SNR,optimal_DM,t_cand,basename,SAVE_DIR,show_plot=Fal
     plt.ylabel('S/N',fontsize=14)
     plt.axvline(x=optimal_DM,label='DM$_{\mathrm{opt}}$',linestyle='--',color='r')
     plt.legend(loc='best',prop={'size':12})
-    plt.savefig(SAVE_DIR+plot_name)
+    plt.savefig(plot_name)
     if (show_plot==True):
         plt.show()
     else:
@@ -44,11 +43,10 @@ optimal_DM = DM that maximized S/N
 offpulse_std_value = Off-pulse standard deviation to normalize the dedispersed time series.
 freq_unit = Unit of radio frequency (usually GHz) for plotting
 time_offset_unit = Unit of time (usually s) for plotting
-basename = Basename (string) for output plot
-SAVE_DIR = Path to which plot muse be saved
+basename = Basename (string) for output plot (including path)
 show_plot = Do you want to show the plot live? (True/False) (default = False)
 '''
-def plot_dedisp_subband_SNRvsDM(dedisp_ds,dedisp_timeseries,dedisp_times,freqs_array,t_cand,t_resol,trial_DMs,SNR,optimal_DM,offpulse_std_value,freq_unit='GHz',time_offset_unit='s',timeoffset_conversion_factor=1.0,basename='',SAVE_DIR='',show_plot=False):
+def plot_dedisp_subband_SNRvsDM(dedisp_ds,dedisp_timeseries,dedisp_times,freqs_array,t_cand,t_resol,trial_DMs,SNR,optimal_DM,offpulse_std_value,freq_unit='GHz',time_offset_unit='s',timeoffset_conversion_factor=1.0,basename='',show_plot=False):
     low_freq_limit = np.min(freqs_array)
     high_freq_limit = np.max(freqs_array)
     plot_name = basename+'_t'+'%.3f'% (t_cand)+'_dedispDS_SNRvsDM_freqs'+'%.2f'% (low_freq_limit)+'to'+'%.2f'% (high_freq_limit)+'.png'
@@ -85,7 +83,7 @@ def plot_dedisp_subband_SNRvsDM(dedisp_ds,dedisp_timeseries,dedisp_times,freqs_a
     ax3.set_xlabel('Time offset ('+time_offset_unit+')',fontsize=14)
     ax3.set_ylabel('Radio frequency ('+freq_unit+')',fontsize=14)
     ax3.set_xlim(dedisp_time_offset[0],dedisp_time_offset[-1])
-    plt.savefig(SAVE_DIR+plot_name)
+    plt.savefig(plot_name)
     if (show_plot==True):
         plt.show()
     else:
@@ -110,14 +108,13 @@ flux_unit = Unit of flux density
 freq_unit = Unit of radio frequency (usually GHz) for plotting
 time_offset_unit = Unit of time (usually s) for plotting
 timeoffset_conversion_factor = Conversion factor (float) from time units to time offset units. For example, s -> ms x 1.e3
-basename = Basename (string) for output plot
-SAVE_DIR = Path to which plot muse be saved
+basename = Basename (string) for output plot (including path)
 show_plot = Do you want to show the plot live? (True/False) (default = False)
 vmin = Min. color bar axis value for flux density (default = np.nanmin(whole_ds))
 vmax = Max color bar axis value for flux density (default = np.nanmax(whole_ds))
 log_colorbar = Do you want a log-spaced colorbar? (True/False) (default = False)
 '''
-def plot_dedisp_ds_SNRvsDM(whole_ds,times,dedisp_ds,dedisp_timeseries,dedisp_times,freqs_array,t_cand,t_resol,trial_DMs,SNR,optimal_DM,offpulse_std_value,flux_unit,freq_unit='GHz',time_offset_unit='s',timeoffset_conversion_factor=1.0,basename='',SAVE_DIR='',show_plot=False,vmin=None,vmax=None,log_colorbar=False):
+def plot_dedisp_ds_SNRvsDM(whole_ds,times,dedisp_ds,dedisp_timeseries,dedisp_times,freqs_array,t_cand,t_resol,trial_DMs,SNR,optimal_DM,offpulse_std_value,flux_unit,freq_unit='GHz',time_offset_unit='s',timeoffset_conversion_factor=1.0,basename='',show_plot=False,vmin=None,vmax=None,log_colorbar=False):
     # Specify plot name.
     low_freq_limit = np.min(freqs_array)
     high_freq_limit = np.max(freqs_array)
@@ -209,7 +206,7 @@ def plot_dedisp_ds_SNRvsDM(whole_ds,times,dedisp_ds,dedisp_timeseries,dedisp_tim
     h = fig.colorbar(im, cax=cbar_ax)
     h.set_label('Flux density (%s)'% (flux_unit),fontsize=16)
 
-    plt.savefig(SAVE_DIR+plot_name)
+    plt.savefig(plot_name)
     if (show_plot==True):
         plt.show()
     else:
@@ -228,14 +225,13 @@ DM = Dispersion measure at which data were dedispersed
 time_unit = Unit of time (usually s) for plotting
 freq_unit = Unit of radio frequency (usually GHz) for plotting
 flux_unit = Unit of flux density
-basename = Basename (string) for output plot
-SAVE_DIR = Path to which dedispersed dynamic spectrum must be saved
+basename = Basename (string) for output plot (including path)
 show_plot = Do you want to show the plot live? (True/False) (default = False)
 vmin = Min. color bar axis value for flux density (default = np.nanmin(ds))
 vmax = Max color bar axis value for flux density (default = np.nanmax(ds))
 log_colorbar = Do you want a log-spaced colorbar? (True/False) (default = False)
 '''
-def plot_dedispersed_ds(dedisp_ds,dedisp_timeseries,dedisp_times,freqs_array,t_cand,t_resol,DM,time_unit,freq_unit,flux_unit,basename,SAVE_DIR,show_plot=False,vmin=None,vmax=None,log_colorbar=False):
+def plot_dedispersed_ds(dedisp_ds,dedisp_timeseries,dedisp_times,freqs_array,t_cand,t_resol,DM,time_unit,freq_unit,flux_unit,basename,show_plot=False,vmin=None,vmax=None,log_colorbar=False):
     # Specify plot name.
     low_freq_limit = np.min(freqs_array)
     high_freq_limit = np.max(freqs_array)
@@ -283,7 +279,7 @@ def plot_dedispersed_ds(dedisp_ds,dedisp_timeseries,dedisp_times,freqs_array,t_c
     cbar_ax = fig.add_axes([0.83, ax1_bottom, 0.03, ax0_bottom-ax1_bottom])
     h = fig.colorbar(im, cax=cbar_ax)
     h.set_label('Flux density (%s)'% (flux_unit),fontsize=14)
-    plt.savefig(SAVE_DIR+plot_name)
+    plt.savefig(plot_name)
     if (show_plot==True):
         plt.show()
     else:

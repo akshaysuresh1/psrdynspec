@@ -22,11 +22,10 @@ Inputs:
 trial_periods = 1D array of trial folding periods (s)
 metric_values = 1D array of metric values at above folding periods
 metric = Metric to maximize for determining optimal folding period ('reducedchisquare', 'profmax', 'profSNR')
-basename = Basename of output plot
-SAVE_DIR = Path to which plot must be saved
+basename = Basename of output plot (including path)
 show_plot = Do you want to show the plot live? (True/False) (default = False)
 '''
-def plot_metricvsperiod(trial_periods,metric_values,metric,basename,SAVE_DIR,show_plot=False):
+def plot_metricvsperiod(trial_periods,metric_values,metric,basename,show_plot=False):
     plot_name = basename+'_%s_vs_periods.png'% (metric)
     met_label = assign_metlabel(metric)
     print('Plotting metric values vs. trial folding periods...')
@@ -34,7 +33,7 @@ def plot_metricvsperiod(trial_periods,metric_values,metric,basename,SAVE_DIR,sho
     plt.plot(trial_periods,metric_values)
     plt.xlabel('Trial folding period (s)',fontsize=14)
     plt.ylabel(met_label,fontsize=14)
-    plt.savefig(SAVE_DIR+plot_name)
+    plt.savefig(plot_name)
     if (show_plot==True):
         plt.show()
     else:
@@ -46,11 +45,10 @@ Inputs:
 phasebins = 1D array of phase values
 profile = Average pulse profile (1D array)
 pfold = Folding period (s)
-basename = Basename of output plot
-SAVE_DIR = Path to which plot must be saved
+basename = Basename of output plot (including path)
 show_plot = Do you want to show the plot live? (True/False)  (default = False)
 '''
-def plot_avgpulseprofile(phasebins,profile,pfold,basename,SAVE_DIR,show_plot=False):
+def plot_avgpulseprofile(phasebins,profile,pfold,basename,show_plot=False):
     print('Plotting average pulse profile for P = %.5f s'% (pfold))
     plot_name = basename+'_avgprofile_P%.5f'% (pfold)+'.png'
     plt.figure()
@@ -58,7 +56,7 @@ def plot_avgpulseprofile(phasebins,profile,pfold,basename,SAVE_DIR,show_plot=Fal
     plt.title('Average pulse profile obtained using P = %.5f s'% (pfold),fontsize=14)
     plt.xlabel('Phase',fontsize=14)
     plt.ylabel('Flux (arbitrary units)',fontsize=14)
-    plt.savefig(SAVE_DIR+plot_name)
+    plt.savefig(plot_name)
     if (show_plot==True):
         plt.show()
     else:
@@ -73,11 +71,10 @@ metric = Metric to maximize for determining optimal folding period ('reducedchis
 phasebins = 1D array of phase values
 profile = Average pulse profile (1D array) obtained by folding time series at the best period
 best_period = Folding period (s) that maximizes the chosen metric.
-basename = Basename of output plot
-SAVE_DIR = Path to which plot must be saved
+basename = Basename of output plot (including path)
 show_plot = Do you want to show the plot live? (True/False)  (default = False)
 '''
-def subplots_metric_profile(trial_periods,metric_values,metric,phasebins,profile,best_period,basename,SAVE_DIR,show_plot=False):
+def subplots_metric_profile(trial_periods,metric_values,metric,phasebins,profile,best_period,basename,show_plot=False):
     plot_name = basename+'_%s_bestprofile.png'% (metric)
     met_label = assign_metlabel(metric)
     fig,axes = plt.subplots(nrows=2,ncols=1,gridspec_kw={'height_ratios': [1, 1.5]},figsize=(9,6.5))
@@ -93,7 +90,7 @@ def subplots_metric_profile(trial_periods,metric_values,metric,phasebins,profile
     axes[1].set_xlabel('Phase',fontsize=14)
     axes[1].set_ylabel('Flux (arbitrary units)',fontsize=14)
     fig.subplots_adjust(left=0.1, right=0.9, top=0.9,bottom=0.1,hspace=0.3)
-    plt.savefig(SAVE_DIR+plot_name)
+    plt.savefig(plot_name)
     if (show_plot==True):
         plt.show()
     else:
@@ -107,14 +104,13 @@ counts_perrot_phibin = Counts per rotation per phase bin (2D array = (rotation n
 phibins = Phase bins (1D array)
 folding_period = Period (s) used to fold timeseries
 basename = Basename of output plot
-SAVE_DIR = Path to which plot must be saved
 show_plot = Do you want to show the plot live? (True/False) (default = False)
 low_phase_limit = Lower limit to phase axis for plotting (default = 0.0)
 high_phase_limit = Upper limit to phase axis for plotting (default = 1.0)
 rot_spacing = Spacing between consecutive rotations on y-axis of plot (default = 1.0)
 normalization = Pulse normalization factor (float) to aid plotting (default = 'quarterrotmax', i.e., (0.25*(Total no.of rotations)/ global pulse max) )
 '''
-def plot_foldedprofile_rotations(profile_rotations,counts_perrot_phibin,phibins,folding_period,basename,SAVE_DIR,show_plot = False,low_phase_limit=0.0,high_phase_limit=1.0,rot_spacing = 1.0, normalization = 'quarterrotmax'):
+def plot_foldedprofile_rotations(profile_rotations,counts_perrot_phibin,phibins,folding_period,basename,show_plot = False,low_phase_limit=0.0,high_phase_limit=1.0,rot_spacing = 1.0, normalization = 'quarterrotmax'):
     N_rotations = len(profile_rotations)
     plot_name = basename+'_folded_rotations.png'
     scale_fig_factor = N_rotations/100
@@ -146,7 +142,7 @@ def plot_foldedprofile_rotations(profile_rotations,counts_perrot_phibin,phibins,
         axes[1].set_yticks(yticks)
         axes[1].set_yticklabels(yticklabels)
     fig.subplots_adjust(hspace=0.03,left=0.11,bottom=0.05,right=0.94,top=0.96)
-    plt.savefig(SAVE_DIR+plot_name)
+    plt.savefig(plot_name)
     if (show_plot==True):
         plt.show()
     else:

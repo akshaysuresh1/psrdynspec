@@ -8,16 +8,15 @@ import matplotlib.gridspec as gridspec
 Inputs:
 cand_DMs = DMs (pc/cc) of candidates
 cand_sigma = Detection signficance of candidates
-basename = Basename for plot
-SAVE_DIR = Path to which plot must be saved
+basename = Basename for plot (including path)
 show_plot = Do you want to view the plot live? (True/False) (default = False)
 '''
-def scatter_DMvsSN(cand_DMs,cand_sigma,basename,SAVE_DIR,show_plot=False):
+def scatter_DMvsSN(cand_DMs,cand_sigma,basename,show_plot=False):
     plot_name = basename+'_scatterDMvsSN.png'
     plt.scatter(cand_DMs,cand_sigma,s=2)
     plt.xlabel('Dispersion measures (pc cm$^{-3}$)',fontsize=14)
     plt.ylabel('Detection S/N',fontsize=14)
-    plt.savefig(SAVE_DIR+plot_name)
+    plt.savefig(plot_name)
     if (show_plot==True):
         plt.show()
     else:
@@ -34,11 +33,10 @@ cand_sigma = Detection significance of all extracted candidates
 low_DM = Lowest DM (pc/cc) of interest
 high_DM = Largest DM (pc/cc) of interest. Extracted single pulse candidates are identified at DMs between low_DM and high_DM (including endpoints).
 time_margin = A candidate identified within this margin (s) of another candidate at slightly different DM is marked as a duplicate detection.
-basename = Basename for output diagnostic plot
-SAVE_DIR = Path to which diagnostic plot must be saved
+basename = Basename for output diagnostic plot (including path)
 show_plot = Do you want to show the diagnostic plot? (True/False) (default = False)
 '''
-def plot_diag_cands(cand_dedisp_times,cand_DMs,unique_cand_dedisp_times,unique_cand_DMs,cand_sigma,low_DM,high_DM,time_margin,basename,SAVE_DIR,show_plot=False):
+def plot_diag_cands(cand_dedisp_times,cand_DMs,unique_cand_dedisp_times,unique_cand_DMs,cand_sigma,low_DM,high_DM,time_margin,basename,show_plot=False):
     cand_dedisp_times = np.array(cand_dedisp_times,dtype=np.float64)
     cand_DMs = np.array(cand_DMs,dtype=np.float64)
     cand_sigma = np.array(cand_sigma,dtype=np.float64)
@@ -51,7 +49,7 @@ def plot_diag_cands(cand_dedisp_times,cand_DMs,unique_cand_dedisp_times,unique_c
     plt.scatter(x=cand_dedisp_times,y=cand_DMs,s=(cand_sigma**2.)/5,marker='o',facecolor='None',edgecolor='k')
     plt.xlabel('Time (s)',fontsize=14)
     plt.ylabel('Dispersion Measure (pc cm$^{-3}$)',fontsize=14)
-    plt.savefig(SAVE_DIR+plot_name)
+    plt.savefig(plot_name)
     if (show_plot==True):
         plt.show()
     else:
@@ -144,7 +142,7 @@ def plot_DMtime(cand_dedisp_times, cand_DMs, cand_sigma, metadata, SAVE_DIR='', 
 
     # Save plot and display it live, if specified.
     for format in output_formats:
-        plt.savefig(SAVE_DIR+plot_name+'_DMtime'+format)
+        plt.savefig(SAVE_DIR+'/'+plot_name+'_DMtime'+format)
     if show_plot:
         plt.show()
     else:
