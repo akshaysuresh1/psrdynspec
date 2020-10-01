@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+from pkg_resources import get_distribution, DistributionNotFound
 
 try:
     from .io.parse_sp import read_singlepulse, gen_singlepulse
@@ -20,3 +21,8 @@ try:
     from .plotting import bandpass_plot, ds_plot, dedisperse_plot, fft_plot, fold_plot
 except ImportError:
     print("Warning: Cannot import main plotting routines.")
+
+try:
+    __version__ = get_distribution('psrdynspec').version
+except DistributionNotFound:
+    __version__ = '0.0.0 - please install via setup.py'

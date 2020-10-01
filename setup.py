@@ -3,7 +3,7 @@ setup.py -- setup script for installation and use of packages
 """
 from setuptools import setup, find_packages
 
-version_count = '1.1.0'
+__version__ = '1.1.0'
 
 install_requires = [
         'matplotlib>3.0;python_version>"3.7"',
@@ -18,7 +18,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(name='psrdynspec',
-      version=version_count,
+      version=__version__,
       author='Akshay Suresh',
       author_email='as3655@cornell.edu',
       description='Python 3 tools for processing dynamic spectra of radio transients',
@@ -30,9 +30,9 @@ setup(name='psrdynspec',
       license='BSD 3-Clause License',
       classifiers=[
         "Programming Language :: Python :: 3",
-        "Operating System :: Unix",  
+        "Operating System :: Unix",
         "Operating System :: MacOS :: MacOS X",
-        "License :: OSI Approved :: BSD 3-Clause License",      
+        "License :: OSI Approved :: BSD 3-Clause License",
         "Topic :: Scientific/Engineering :: Astronomy"
       ]
 )
