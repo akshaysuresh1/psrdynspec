@@ -11,7 +11,7 @@ file_list = List of .fits files
 FITS_DIR = Path to .fits files
 pol = List of polarization indices to extract (default = [0])
 '''
-def load_psrfits_data(file_list,FITS_DIR,pol=[0]):
+def load_psrfits_data(file_list,pol=[0]):
     if len(file_list)==0:
         print('PSRFITS file list is empty. Quitting.')
         sys.exit(1)
