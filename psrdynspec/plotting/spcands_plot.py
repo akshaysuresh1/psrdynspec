@@ -67,8 +67,9 @@ output_formats = List of file extensions for output plot (d: ['.png'])
 show_plot = Do you want to show the plot live? (True/False) (default = False)
 low_DM_cand = Min. DM (pc/cc) to plot (d: np.min(cand_DMs))
 high_DM_cand = Max DM (pc/cc) to plot (d: np.max(cand_DMs))
+select_indices = Indices of candidates (in cand_dedisp_times array) to indicate with a 'x' symbol in the DM-time plane
 '''
-def plot_DMtime(cand_dedisp_times, cand_DMs, cand_sigma, metadata, SAVE_DIR='', output_formats=['.png'], show_plot=False, low_DM_cand=None, high_DM_cand=None):
+def plot_DMtime(cand_dedisp_times, cand_DMs, cand_sigma, metadata, SAVE_DIR='', output_formats=['.png'], show_plot=False, low_DM_cand=None, high_DM_cand=None, select_indices=None):
     if low_DM_cand is None:
         low_DM_cand = np.min(cand_DMs)
     if high_DM_cand is None:
@@ -90,6 +91,8 @@ def plot_DMtime(cand_dedisp_times, cand_DMs, cand_sigma, metadata, SAVE_DIR='', 
     gs1 = gridspec.GridSpecFromSubplotSpec(1, 1, subplot_spec = outer[1])
     ax1 = plt.subplot(gs1[0])
     ax1.scatter(x=cand_dedisp_times,y=cand_DMs,s=(cand_sigma**2.)/5,marker='o',facecolor='None',edgecolor='k')
+    if select_indices is not None:
+        ax1.plot(cand_dedisp_times[select_indices],cand_DMs[select_indices],marker='x',markersize=8,color='red',linestyle='None')
     ax1.set_ylim((low_DM_cand, high_DM_cand))
     ax1.set_xlabel('Time (s)',fontsize=14)
     ax1.set_ylabel('DM (pc cm$^{-3}$)',fontsize=14)
