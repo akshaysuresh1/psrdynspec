@@ -42,35 +42,34 @@ cand_sigma = Significance of candidate detection at respective DMs
 cand_dedisp_times = Times (s) reported for candidates in dedispersed time dedisperesed time series
 cand_dedisp_samples = Time sample numbers corresponding to above reported times
 time_margin = A candidate identified within this margin (s) of another candidate at slightly different DM is marked as a duplicate detection.
+DM_margin = A candidate within this margin (pc/cc) of another candidate at a nearby time is marked as a duplicate detection.
+
+Returns:
+cand_DMs, cand_sigma, cand_dedisp_times, cand_dedisp_samples: Input arrays re-arranged in order of increasing time
+select_indices = Indices of candidates selected for retention in output arrays. Indices correspond to those in output arrays sorted in ascending order of time.
 '''
-def remove_duplicates(cand_DMs,cand_sigma,cand_dedisp_times,cand_dedisp_samples,time_margin):
+def remove_duplicates(cand_DMs,cand_sigma,cand_dedisp_times,cand_dedisp_samples,time_margin,DM_margin):
     # Sort the extracted candidate list in order of increasing times.
     sort_index = np.argsort(cand_dedisp_times)
     cand_dedisp_times = cand_dedisp_times[sort_index]
     cand_dedisp_samples = cand_dedisp_samples[sort_index]
     cand_DMs = cand_DMs[sort_index]
     cand_sigma = cand_sigma[sort_index]
-    # Create new arrays for storing information of unique candidates.
-    unique_cand_DMs = np.array([])
-    unique_cand_sigma = np.array([])
-    unique_cand_dedisp_times = np.array([])
-    unique_cand_dedisp_samples = np.array([])
-    # Remove duplicate candidates.
+    # Initialize empty arrays.
+    check_indices = np.array([],dtype=int)
+    select_indices = np.array([],dtype=int)
+    # Remove duplicate candidates
     i = 0
-    while(i<len(cand_dedisp_times)):
-        time = cand_dedisp_times[i]
-        indices = i+np.where(np.abs(cand_dedisp_times[i:]-time)<=time_margin)[0]
-        select_cand_index = indices[np.argmax(cand_sigma[indices])]
-        # Save information about the selected candidate, if not duplicate.
-        if (cand_dedisp_times[select_cand_index] not in unique_cand_dedisp_times):
-            unique_cand_dedisp_samples = np.append(unique_cand_dedisp_samples,cand_dedisp_samples[select_cand_index])
-            unique_cand_dedisp_times = np.append(unique_cand_dedisp_times,cand_dedisp_times[select_cand_index])
-            unique_cand_DMs = np.append(unique_cand_DMs,cand_DMs[select_cand_index])
-            unique_cand_sigma = np.append(unique_cand_sigma,cand_sigma[select_cand_index])
-        # Update the iteration value by the number of indices parsed.
-        i+= np.size(indices)
+    while i<len(cand_dedisp_times):
+        if i not in check_indices:
+            indices = np.where(np.logical_and(np.abs(cand_dedisp_times-cand_dedisp_times[i])<=time_margin, np.abs(cand_DMs-cand_DMs[i])<=DM_margin ))[0]
+            select_cand_index = indices[np.argmax(cand_sigma[indices])]
+            if select_cand_index not in check_indices:
+                select_indices = np.append(select_indices, select_cand_index)
+                check_indices = np.append(check_indices, indices)
+        i+=1
     print('Duplicate candidates removed.')
-    return unique_cand_DMs, unique_cand_sigma, unique_cand_dedisp_times, unique_cand_dedisp_samples
+    return cand_DMs, cand_sigma, cand_dedisp_times, cand_dedisp_samples, select_indices
 #########################################################################
 # Compile list of single pulse candidates over a specified DM range. Info from .singlepulse files is used.
 '''
