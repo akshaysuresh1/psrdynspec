@@ -12,9 +12,9 @@ DM = Dispersion measure (pc/cc) at which dispersive delay must be calculated
 ref_freq = Reference frequency (GHz) relative to which dispersive delay must be calculated
 '''
 def calc_tDM(freqs_GHz,DM,ref_freq):
-    kDM = 4.149e-3
+    a_DM = 4.1488064239e-3
     freq_factor = freqs_GHz**-2. - ref_freq**-2.
-    tDM = kDM*DM*freq_factor
+    tDM = a_DM*DM*freq_factor
     return tDM
 ##########################################################################
 # Brute-force dedisperse a dynamic spectrum at a given DM.
