@@ -1,5 +1,6 @@
 from .config import *
 import matplotlib.gridspec as gridspec
+from psrdynspec.modules.dedisperse import calc_tDM
 from astropy.stats import sigma_clip
 
 # Plots saved to disk by default. Plots displayed on live window only if show_plot==True.
@@ -273,6 +274,8 @@ def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma
     # Plot non-dedispersed dynamic spectrum in top right panel.
     ax20 = fig.add_subplot(right_gridspec[0])
     ax20.imshow(ds, aspect='auto', interpolation='nearest', origin='lower', extent=[times[0], times[-1], freqs_GHz[0], freqs_GHz[-1]], vmin=vmin, vmax=vmax)
+    guide_DMcurve = 0.5*(dedisp_times[0] + cand_dedisp_times[cand_index]) + calc_tDM(freqs_GHz, cand_DMs[cand_index], freqs_GHz[-1])
+    ax20.plot(guide_DMcurve,freqs_GHz, linestyle='-', color='white')
     ax20.set_xlabel('Time (s)', fontsize=14)
     ax20.set_ylabel('Radio frequency (GHz)', fontsize=14)
     # Plot dedispersed dynamic spectrum and dedispersed time series in bottom right panel.
@@ -281,6 +284,7 @@ def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma
     ax210 = plt.subplot(gs21[0])
     dedisp_SNR = dedisp_timeseries/sigma_clip(dedisp_timeseries, sigma=5, cenfunc='median', stdfunc='std', maxiters=1).std()
     ax210.plot(dedisp_times, dedisp_SNR, linestyle='-')
+    ax210.annotate('DM = %.1f pc cm$^{-3}$'% (cand_DMs[cand_index]),xy=(0.63,0.8),xycoords='axes fraction',fontsize=14)
     ax210.set_ylabel('(S/N)$_{\mathrm{ts}}$', fontsize=14)
     # Dedispersed dynamic spectrum
     ax211 = plt.subplot(gs21[1],sharex=ax210)
