@@ -218,7 +218,7 @@ def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma
     gs1 = gridspec.GridSpecFromSubplotSpec(1, 1, subplot_spec = left_gridspec[1])
     ax1 = plt.subplot(gs1[0])
     ax1.scatter(x=cand_dedisp_times,y=cand_DMs,s=(cand_sigma**2.)/5,marker='o',facecolor='None',edgecolor='k')
-    ax1.scatter(x=cand_dedisp_times[cand_index],y=cand_DMs[cand_index],s=(cand_sigma[cand_index]**2.)/5,marker='o',facecolor='yellow',edgecolor='red')
+    ax1.scatter(x=cand_dedisp_times[cand_index],y=cand_DMs[cand_index],s=(cand_sigma[cand_index]**2.)/5,marker='o',facecolor='yellow',edgecolor='orange')
     ax1.set_ylim((low_DM_cand, high_DM_cand))
     ax1.set_xlabel('Time (s)',fontsize=14)
     ax1.set_ylabel('DM (pc cm$^{-3}$)',fontsize=14)
