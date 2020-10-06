@@ -222,7 +222,7 @@ def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma
     ax1.set_xlabel('Time (s)',fontsize=14)
     ax1.set_ylabel('DM (pc cm$^{-3}$)',fontsize=14)
     # Split top gridspec into three subplots.
-    gs0 = gridspec.GridSpecFromSubplotSpec(1, 3, subplot_spec = left_gridspec[0], width_ratios=[1,1,1],wspace=0.25)
+    gs0 = gridspec.GridSpecFromSubplotSpec(1, 3, subplot_spec = left_gridspec[0], width_ratios=[1,1,1],wspace=0.26)
     # Left subplot: Histogram of candidate S/N
     ax00 = plt.subplot(gs0[0])
     ax00.hist(cand_sigma, bins='auto', facecolor='None', edgecolor='k', histtype='step')
@@ -281,7 +281,7 @@ def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma
     ax210 = plt.subplot(gs21[0])
     dedisp_SNR = dedisp_timeseries/sigma_clip(dedisp_timeseries, sigma=5, cenfunc='median', stdfunc='std', maxiters=1).std()
     ax210.plot(dedisp_times, dedisp_SNR, linestyle='-')
-    ax210.set_ylabel('S/N$_{\mathrm{timeseries}}$', fontsize=14)
+    ax210.set_ylabel('(S/N)$_{\mathrm{ts}}$', fontsize=14)
     # Dedispersed dynamic spectrum
     ax211 = plt.subplot(gs21[1],sharex=ax210)
     ax211.imshow(dedisp_ds, aspect='auto', interpolation='nearest', origin='lower', extent=[dedisp_times[0], dedisp_times[-1], freqs_GHz[0], freqs_GHz[-1]], vmin=vmin, vmax=vmax)
