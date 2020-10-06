@@ -218,7 +218,7 @@ def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma
     gs1 = gridspec.GridSpecFromSubplotSpec(1, 1, subplot_spec = left_gridspec[1])
     ax1 = plt.subplot(gs1[0])
     ax1.scatter(x=cand_dedisp_times,y=cand_DMs,s=(cand_sigma**2.)/5,marker='o',facecolor='None',edgecolor='k')
-    ax1.plot(cand_dedisp_times[cand_index],cand_DMs[cand_index],marker='x',markersize=8,color='red',linestyle='None')
+    ax1.scatter(x=cand_dedisp_times[cand_index],y=cand_DMs[cand_index],s=(cand_sigma[cand_index]**2.)/5,marker='o',facecolor='yellow',edgecolor='red')
     ax1.set_ylim((low_DM_cand, high_DM_cand))
     ax1.set_xlabel('Time (s)',fontsize=14)
     ax1.set_ylabel('DM (pc cm$^{-3}$)',fontsize=14)
@@ -274,6 +274,9 @@ def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma
     # Plot non-dedispersed dynamic spectrum in top right panel.
     ax20 = fig.add_subplot(right_gridspec[0])
     ax20.imshow(ds, aspect='auto', interpolation='nearest', origin='lower', extent=[times[0], times[-1], freqs_GHz[0], freqs_GHz[-1]], vmin=vmin, vmax=vmax)
+    mask_ds_chans = np.where(np.mean(ds,axis=1)==0)[0]
+    for chan in mask_ds_chans:
+        ax20.axhline(y=freqs_GHz[chan],xmin=0., xmax=0.03, linestyle='-', color='salmon')
     guide_DMcurve = 0.5*(dedisp_times[0] + cand_dedisp_times[cand_index]) + calc_tDM(freqs_GHz, cand_DMs[cand_index], freqs_GHz[-1])
     ax20.plot(guide_DMcurve,freqs_GHz, linestyle='-', color='white')
     ax20.set_xlabel('Time (s)', fontsize=14)
@@ -289,6 +292,8 @@ def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma
     # Dedispersed dynamic spectrum
     ax211 = plt.subplot(gs21[1],sharex=ax210)
     ax211.imshow(dedisp_ds, aspect='auto', interpolation='nearest', origin='lower', extent=[dedisp_times[0], dedisp_times[-1], freqs_GHz[0], freqs_GHz[-1]], vmin=vmin, vmax=vmax)
+    for chan in mask_ds_chans:
+        ax211.axhline(y=freqs_GHz[chan],xmin=0., xmax=0.03, linestyle='-', color='salmon')
     ax211.set_xlabel('Time (s) referenced to %.2f GHz'% (freqs_GHz[-1]), fontsize=14)
     ax211.set_ylabel('Radio frequency (GHz)', fontsize=14)
 
