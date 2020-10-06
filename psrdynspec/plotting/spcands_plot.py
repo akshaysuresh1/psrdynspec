@@ -104,7 +104,7 @@ def plot_DMtime(cand_dedisp_times, cand_DMs, cand_sigma, metadata, SAVE_DIR='', 
     ax00.hist(cand_sigma, bins='auto', facecolor='None', edgecolor='k', histtype='step')
     ax00.set_xlim((np.min(cand_sigma),np.max(cand_sigma)))
     ax00.set_ylabel('No. of pulses per bin',fontsize=14)
-    ax00.set_xlabel('S/N',fontsize=14)
+    ax00.set_xlabel('Matched filtering S/N',fontsize=14)
     # Middle subplot: Histogram of candidate DMs
     ax01 = plt.subplot(gs0[1])
     ax01.hist(cand_DMs, bins='auto', facecolor='None', edgecolor='k', histtype='step')
@@ -117,7 +117,7 @@ def plot_DMtime(cand_dedisp_times, cand_DMs, cand_sigma, metadata, SAVE_DIR='', 
     ax02.set_xlim((low_DM_cand, high_DM_cand))
     ax02.set_ylim((np.min(cand_sigma),np.max(cand_sigma)))
     ax02.set_xlabel('DM (pc cm$^{-3}$)',fontsize=14)
-    ax02.set_ylabel('S/N', fontsize=14)
+    ax02.set_ylabel('Matched filtering S/N', fontsize=14)
     fig.subplots_adjust(left=0.08, right=0.92, top=0.8, bottom=0.08)
 
     # Metadata
