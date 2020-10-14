@@ -61,10 +61,10 @@ def extract_psrfits_datachunk(glob_psrfits, start_time, stop_time, pol=[0]):
     print('Stop time = %.2f s'% (stop_time))
     t_start = np.floor(start_time/t_samp).astype(int) # Start time cast into units of sample numbers
     t_stop = np.ceil(stop_time/t_samp).astype(int) # Stop time cast into units of sample numbers
-    startfile_index = np.where(cumsamples_per_file<=t_start)[0][-1] # Index of first file that needs to be read
-    stopfile_index = np.where(cumsamples_per_file<=t_stop)[0][-1] # Index of last file that needs to be read
-    startarray_index = t_start - cumsamples_per_file[startfile_index] # Index of t_start in first data file to be read
-    stoparray_index = t_stop - cumsamples_per_file[stopfile_index] # Index of t_stop in last data file to be read
+    startfile_index = np.where(cumsamples_per_file>=t_start)[0][0] # Index of first file that needs to be read
+    stopfile_index = np.where(cumsamples_per_file>=t_stop)[0][0] # Index of last file that needs to be read
+    startarray_index = ntsamples_per_file[startfile_index] + t_start - cumsamples_per_file[startfile_index] # Index of t_start in first data file to be read
+    stoparray_index = ntsamples_per_file[startfile_index] + t_stop - cumsamples_per_file[stopfile_index] # Index of t_stop in last data file to be read
     print('No. of files to be read for given time range = %d'% (stopfile_index-startfile_index+1))
 
     for idx_file in range(startfile_index, stopfile_index+1):
