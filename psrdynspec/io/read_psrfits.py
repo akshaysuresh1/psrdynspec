@@ -3,7 +3,7 @@
 from psrdynspec.io.read_header import Header
 from astropy.io import fits
 import numpy as np
-import sys
+import sys, glob
 #################################################
 # Extract all data from a list of PSRFITS files.
 '''
