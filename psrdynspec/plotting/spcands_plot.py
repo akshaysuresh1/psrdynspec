@@ -206,7 +206,7 @@ def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma
             vmax = np.nanmean(whole_ds) + N*np.nanstd(whole_ds)
 
     # Set plot name.
-    plot_name = metadata.basename + '_t%.2f'% (cand_dedisp_times[cand_index])
+    plot_name = metadata.basename + '_t%.2f_DM%.1f'% (cand_dedisp_times[cand_index], cand_DMs[cand_index])
 
     # PLOTTING
     fig = plt.figure(figsize=(16,8))
