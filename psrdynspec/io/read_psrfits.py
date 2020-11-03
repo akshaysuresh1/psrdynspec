@@ -90,5 +90,5 @@ def extract_psrfits_datachunk(glob_psrfits, start_time, stop_time, pol=[0]):
         else:
             data = np.concatenate((data, data_file),axis=-1)
 
-    return data, hdr
+    return data, hdr, t_start*t_samp
 #################################################

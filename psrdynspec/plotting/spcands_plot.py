@@ -174,8 +174,9 @@ low_DM_cand = Min. DM (pc/cc) limit to plot (d: np.min(cand_DMs))
 high_DM_cand = Max DM (pc/cc) limit to plot (d: np.max(cand_DMs))
 vmin = Min. color bar axis value for flux density (default = np.nanmin(whole_ds))
 vmax = Max color bar axis value for flux density (default = np.nanmax(whole_ds))
+cmap = Matplotlib color map for dynamic spectrum plotting (d: 'viridis')
 '''
-def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma, metadata, ds, times, freqs_GHz, dedisp_ds, dedisp_timeseries, dedisp_times, SAVE_DIR='', output_formats=['.png'], show_plot=False, low_DM_cand=None, high_DM_cand=None, vmin=None, vmax=None):
+def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma, metadata, ds, times, freqs_GHz, dedisp_ds, dedisp_timeseries, dedisp_times, SAVE_DIR='', output_formats=['.png'], show_plot=False, low_DM_cand=None, high_DM_cand=None, vmin=None, vmax=None, cmap='viridis'):
     # Set low DM limit for plot.
     if low_DM_cand is None:
         low_DM_cand = np.min(cand_DMs)
@@ -273,7 +274,7 @@ def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma
     right_gridspec.update(left=0.66,right=0.98,top=0.97,bottom=0.08)
     # Plot non-dedispersed dynamic spectrum in top right panel.
     ax20 = fig.add_subplot(right_gridspec[0])
-    ax20.imshow(ds, aspect='auto', interpolation='nearest', origin='lower', extent=[times[0], times[-1], freqs_GHz[0], freqs_GHz[-1]], vmin=vmin, vmax=vmax)
+    ax20.imshow(ds, aspect='auto', interpolation='nearest', origin='lower', extent=[times[0], times[-1], freqs_GHz[0], freqs_GHz[-1]], vmin=vmin, vmax=vmax, cmap=cmap)
     mask_ds_chans = np.where(np.mean(ds,axis=1)==0)[0]
     for chan in mask_ds_chans:
         ax20.axhline(y=freqs_GHz[chan],xmin=0., xmax=0.03, linestyle='-', color='salmon')
@@ -291,7 +292,7 @@ def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma
     ax210.set_ylabel('(S/N)$_{\mathrm{ts}}$', fontsize=14)
     # Dedispersed dynamic spectrum
     ax211 = plt.subplot(gs21[1],sharex=ax210)
-    ax211.imshow(dedisp_ds, aspect='auto', interpolation='nearest', origin='lower', extent=[dedisp_times[0], dedisp_times[-1], freqs_GHz[0], freqs_GHz[-1]], vmin=vmin, vmax=vmax)
+    ax211.imshow(dedisp_ds, aspect='auto', interpolation='nearest', origin='lower', extent=[dedisp_times[0], dedisp_times[-1], freqs_GHz[0], freqs_GHz[-1]], vmin=vmin, vmax=vmax, cmap=cmap)
     for chan in mask_ds_chans:
         ax211.axhline(y=freqs_GHz[chan],xmin=0., xmax=0.03, linestyle='-', color='salmon')
     ax211.set_xlabel('Time (s) referenced to %.2f GHz'% (freqs_GHz[-1]), fontsize=14)
