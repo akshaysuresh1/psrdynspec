@@ -60,6 +60,7 @@ def extract_psrfits_datachunk(glob_psrfits, start_time, stop_time, pol=[0]):
     print('Start time = %.2f s'% (start_time))
     print('Stop time = %.2f s'% (stop_time))
     t_start = np.floor(start_time/t_samp).astype(int) # Start time cast into units of sample numbers
+    acc_start_time = t_start*t_samp
     t_stop = np.ceil(stop_time/t_samp).astype(int) # Stop time cast into units of sample numbers
     startfile_index = np.where(cumsamples_per_file>=t_start)[0][0] # Index of first file that needs to be read
     stopfile_index = np.where(cumsamples_per_file>=t_stop)[0][0] # Index of last file that needs to be read
@@ -90,5 +91,5 @@ def extract_psrfits_datachunk(glob_psrfits, start_time, stop_time, pol=[0]):
         else:
             data = np.concatenate((data, data_file),axis=-1)
 
-    return data, hdr, t_start*t_samp
+    return data, hdr, acc_start_time
 #################################################
