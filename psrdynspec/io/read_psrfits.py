@@ -82,7 +82,7 @@ def extract_psrfits_datachunk(glob_psrfits, start_time, stop_time, pol=[0]):
         data_file = data_file[pol] # Data shape = (len(pol), NCHANS, Ntsamples)
         # If only 1 file to load, ...
         if startfile_index==stopfile_index:
-            return data_file[...,startarray_index:stoparray_index], hdr
+            return data_file[...,startarray_index:stoparray_index], hdr, acc_start_time
         # Keep track of data from multiple files.
         if idx_file==startfile_index:
             data = np.copy(data_file)[...,startarray_index:]
