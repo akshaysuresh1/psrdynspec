@@ -185,6 +185,7 @@ def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma
         high_DM_cand = np.min(cand_DMs)
     # Set center frequency (MHz).
     center_freq = metadata.lofreq + 0.5*(metadata.numchan-1)*metadata.chan_width # MHz
+    sampling_time = times[1] - times[0] # seconds
     # Set vmin for dynamic spectrum plots.
     if vmin is None:
         vmin = np.nanmin(ds)
@@ -265,7 +266,7 @@ def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma
     ax01.annotate(MJD_label+' = %.12g'% (metadata.epoch),xy=(0.0, 1.1),xycoords='axes fraction',fontsize=14)
     # Column 2
     ax02.annotate('No. of samples = %d'% (metadata.N),xy=(0.0, 1.4), xycoords='axes fraction',fontsize=14)
-    ax02.annotate('Sampling time = %.2f $\mu$s'% (metadata.dt*1e6),xy=(0.0, 1.25), xycoords='axes fraction',fontsize=14)
+    ax02.annotate('Sampling time = %.2f $\mu$s'% (sampling_time*1e6),xy=(0.0, 1.25), xycoords='axes fraction',fontsize=14)
     ax02.annotate('Freq$_{\mathrm{ctr}}$ = %.1f MHz'% (center_freq),xy=(0.0, 1.1),xycoords='axes fraction',fontsize=14)
 
     ## RIGHT GRIDSPEC
