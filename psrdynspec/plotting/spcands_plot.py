@@ -276,7 +276,7 @@ def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma
     # Plot non-dedispersed dynamic spectrum in top right panel.
     ax20 = fig.add_subplot(right_gridspec[0])
     ax20.imshow(ds, aspect='auto', interpolation='nearest', origin='lower', extent=[times[0], times[-1], freqs_GHz[0], freqs_GHz[-1]], vmin=vmin, vmax=vmax, cmap=cmap)
-    mask_ds_chans = np.where(np.mean(ds,axis=1)==0)[0]
+    mask_ds_chans = np.where(np.round(np.mean(data,axis=1),10)==0)[0]
     for chan in mask_ds_chans:
         ax20.axhline(y=freqs_GHz[chan],xmin=0., xmax=0.03, linestyle='-', color='salmon')
     guide_DMcurve = 0.5*(dedisp_times[0] + cand_dedisp_times[cand_index]) + calc_tDM(freqs_GHz, cand_DMs[cand_index], freqs_GHz[-1])
