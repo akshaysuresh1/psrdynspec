@@ -59,8 +59,9 @@ freq_low = Lowest frequency (GHz) for which we intend to calculate the dispersiv
 t_resol = Time resolution (s) of the data
 start_time = Start time (s) of the data
 t_center = Central time (s) reported for candidate by PRESTO
+t_interval = Time interval (s) around central time to compute signal maximum (d: entire time series length)
 '''
-def calc_DM_at_maxSNR(ds,freqs_GHz,trial_DMs,ref_freq,freq_low,t_resol,start_time,t_center):
+def calc_DM_at_maxSNR(ds,freqs_GHz,trial_DMs,ref_freq,freq_low,t_resol,start_time,t_center,t_interval=None):
     # Keep track of how signal and offpulse_std vary with trial DM.
     signal_array = np.zeros_like(trial_DMs)
     offpulse_std_array = np.zeros_like(trial_DMs)
@@ -70,8 +71,11 @@ def calc_DM_at_maxSNR(ds,freqs_GHz,trial_DMs,ref_freq,freq_low,t_resol,start_tim
         if (DM%2==0):
             print('Dedispersing at DM = %s pc/cc'% (DM))
         dedisp_ds, dedisp_times,dedisp_timeseries = dedisperse_ds(ds,freqs_GHz,DM,ref_freq,freq_low,t_resol,start_time)
-        signal = np.max(dedisp_timeseries) # Signal
-        offpulse_std = sigma_clip(dedisp_timeseries,sigma=3.0,maxiters=5,cenfunc='median', stdfunc='std').std() # Off-pulse standard deviation
+        if t_interval is None:
+            signal = np.max(dedisp_timeseries) # Signal
+        else:
+            signal = np.max(dedisp_timeseries[np.where(np.abs(dedisp_times-t_center)<=t_interval)[0]])    
+        offpulse_std = sigma_clip(dedisp_timeseries,sigma=5.0,maxiters=1,cenfunc='median', stdfunc='std').std() # Off-pulse standard deviation
         signal_array[i] = signal
         offpulse_std_array[i] = offpulse_std
     # Find the DM at which S/N gets maximized.
