@@ -172,17 +172,21 @@ output_formats = List of file extensions for output plot (d: ['.png'])
 show_plot = Do you want to show the plot live? (True/False) (default = False)
 low_DM_cand = Min. DM (pc/cc) limit to plot (d: np.min(cand_DMs))
 high_DM_cand = Max DM (pc/cc) limit to plot (d: np.max(cand_DMs))
+mask_chans = List or 1D array of channel numbers to indicate as masked channels in the dynamic spectrum.
 vmin = Min. color bar axis value for flux density (default = np.nanmin(whole_ds))
 vmax = Max color bar axis value for flux density (default = np.nanmax(whole_ds))
 cmap = Matplotlib color map for dynamic spectrum plotting (d: 'viridis')
 '''
-def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma, metadata, ds, times, freqs_GHz, dedisp_ds, dedisp_timeseries, dedisp_times, SAVE_DIR='', output_formats=['.png'], show_plot=False, low_DM_cand=None, high_DM_cand=None, vmin=None, vmax=None, cmap='viridis'):
+def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma, metadata, ds, times, freqs_GHz, dedisp_ds, dedisp_timeseries, dedisp_times, SAVE_DIR='', output_formats=['.png'], show_plot=False, low_DM_cand=None, high_DM_cand=None, mask_chans=None, vmin=None, vmax=None, cmap='viridis'):
     # Set low DM limit for plot.
     if low_DM_cand is None:
         low_DM_cand = np.min(cand_DMs)
     # Set high DM limit for plot.
     if high_DM_cand is None:
         high_DM_cand = np.min(cand_DMs)
+    # Set channels to mask in dynamic spectrum.
+    if mask_chans is None:
+        mask_chans = []
     # Set center frequency (MHz).
     center_freq = metadata.lofreq + 0.5*(metadata.numchan-1)*metadata.chan_width # MHz
     sampling_time = times[1] - times[0] # seconds
@@ -276,8 +280,7 @@ def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma
     # Plot non-dedispersed dynamic spectrum in top right panel.
     ax20 = fig.add_subplot(right_gridspec[0])
     ax20.imshow(ds, aspect='auto', interpolation='nearest', origin='lower', extent=[times[0], times[-1], freqs_GHz[0], freqs_GHz[-1]], vmin=vmin, vmax=vmax, cmap=cmap)
-    mask_ds_chans = np.where(np.round(np.mean(data,axis=1),10)==0)[0]
-    for chan in mask_ds_chans:
+    for chan in mask_chans:
         ax20.axhline(y=freqs_GHz[chan],xmin=0., xmax=0.03, linestyle='-', color='salmon')
     guide_DMcurve = 0.5*(dedisp_times[0] + cand_dedisp_times[cand_index]) + calc_tDM(freqs_GHz, cand_DMs[cand_index], freqs_GHz[-1])
     ax20.plot(guide_DMcurve,freqs_GHz, linestyle='-', color='white')
@@ -294,7 +297,7 @@ def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma
     # Dedispersed dynamic spectrum
     ax211 = plt.subplot(gs21[1],sharex=ax210)
     ax211.imshow(dedisp_ds, aspect='auto', interpolation='nearest', origin='lower', extent=[dedisp_times[0], dedisp_times[-1], freqs_GHz[0], freqs_GHz[-1]], vmin=vmin, vmax=vmax, cmap=cmap)
-    for chan in mask_ds_chans:
+    for chan in mask_chans:
         ax211.axhline(y=freqs_GHz[chan],xmin=0., xmax=0.03, linestyle='-', color='salmon')
     ax211.set_xlabel('Time (s) referenced to %.2f GHz'% (freqs_GHz[-1]), fontsize=14)
     ax211.set_ylabel('Radio frequency (GHz)', fontsize=14)
