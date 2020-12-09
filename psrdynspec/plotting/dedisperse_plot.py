@@ -103,6 +103,7 @@ SNR = 1D array of signal-to-noise ratios at above trial DMs
 optimal_DM = DM (pc/cc) that maximizes the S/N
 t_cand = Time (s) of occurrence of candidate
 offpulse_std_value = Off-pulse standard deviation to normalize the dedispersed time series (d: 1.)
+mask_chans = List of channel numbers to indicate as masked channels (d: None)
 SN_smooth = 1D array, Smoothed S/N vs. trial DM curve (d: None)
 basename = Basename (string) for output plot (including path)
 show_plot = Do you want to view the plot live? (True/False) (d: False)
@@ -114,7 +115,7 @@ flux_unit = Unit of flux density (d: arb. units)
 freq_unit = Unit of radio frequency (d: GHz)
 time_unit = Unit of time (d: s)
 '''
-def plot_dedisp_ds_SNRvsDM(whole_ds,times,freqs_array,dedisp_ds,dedisp_timeseries,dedisp_times,trial_DMs,SNR,optimal_DM,t_cand,offpulse_std_value=1.0,SN_smooth=None,basename='',show_plot=False,vmin=None,vmax=None,cmap='viridis',log_colorbar=False,flux_unit='arb. units',freq_unit='GHz',time_unit='s'):
+def plot_dedisp_ds_SNRvsDM(whole_ds,times,freqs_array,dedisp_ds,dedisp_timeseries,dedisp_times,trial_DMs,SNR,optimal_DM,t_cand,offpulse_std_value=1.0,mask_chans=None,SN_smooth=None,basename='',show_plot=False,vmin=None,vmax=None,cmap='viridis',log_colorbar=False,flux_unit='arb. units',freq_unit='GHz',time_unit='s'):
     # Specify plot name.
     low_freq_limit = np.min(freqs_array)
     high_freq_limit = np.max(freqs_array)
@@ -140,6 +141,10 @@ def plot_dedisp_ds_SNRvsDM(whole_ds,times,freqs_array,dedisp_ds,dedisp_timeserie
             N = float(vmax.split('mean+')[1].split('sigma')[0])
             vmax = np.nanmean(whole_ds) + N*np.nanstd(whole_ds)
 
+    # Set channels to mask in dynamic spectrum.
+    if mask_chans is None:
+        mask_chans = []
+
     # Construct the gridspec framework for figure.
     fig = plt.figure(figsize=(8,14))
     #make outer gridspec
@@ -151,10 +156,10 @@ def plot_dedisp_ds_SNRvsDM(whole_ds,times,freqs_array,dedisp_ds,dedisp_timeserie
     ax1 = plt.subplot(gs1[0])
     ax1.plot(trial_DMs,SNR, linestyle=':', color='k')
     if SN_smooth is not None:
-        ax1.plot(trial_DMs, SN_smooth, linestyle=':', color='r', alpha=0.5)
+        ax1.plot(trial_DMs, SN_smooth, linestyle=':', color='r', alpha=0.8)
     ax1.set_xlabel('Trial DM (pc cm$^{-3}$)',fontsize=16)
     ax1.set_ylabel('S/N',fontsize=16)
-    ax1.axvline(x=optimal_DM,label='DM$_{\mathrm{opt}}$',linestyle='--',color='sandybrown',alpha=0.5)
+    ax1.axvline(x=optimal_DM,label='DM$_{\mathrm{opt}}$',linestyle='--',color='sandybrown',alpha=0.8)
     ax1.legend(loc='best',prop={'size':14})
 
     # Construct nested gridspec within the bottom panel of outer gridspec.
@@ -180,7 +185,7 @@ def plot_dedisp_ds_SNRvsDM(whole_ds,times,freqs_array,dedisp_ds,dedisp_timeserie
 
     # Plot non-dedispersed dynamic spectrum in lower panel of bottom gridspec.
     gs3 = gridspec.GridSpecFromSubplotSpec(1, 1, subplot_spec = outer[2])
-    ax4 = plt.subplot(gs3[0],sharex=ax2)
+    ax4 = plt.subplot(gs3[0])
     print('Plotting non-dedispersed dynamic spectrum')
     if (log_colorbar==False):
         im = ax4.imshow(whole_ds,origin='lower',interpolation='nearest',aspect='auto',extent=ds_ext,vmin=vmin,vmax=vmax,cmap=cmap)
@@ -189,6 +194,13 @@ def plot_dedisp_ds_SNRvsDM(whole_ds,times,freqs_array,dedisp_ds,dedisp_timeserie
     ax4.set_ylabel('Radio frequency (%s)'% (freq_unit),fontsize=16)
     ax4.set_xlabel('Time (%s)' % (time_unit),fontsize=16)
     ax4.set_xlim(times[0],times[-1])
+
+    # Indicate masked channels in dedispersed and non-dedispersed dynamic spectra.
+    for chan in mask_chans:
+        # Masked channels in dedispersed dynamic spectrum.
+        ax3.axhline(y=freqs_array[chan],xmin=0., xmax=0.03, linestyle='-', color='salmon')
+        # Masked channels in non-dedispersed dynamic spectrum
+        ax4.axhline(y=freqs_array[chan],xmin=0., xmax=0.03, linestyle='-', color='salmon')
 
     # Create space for colorbar on right side of plot.
     fig.subplots_adjust(right=0.80)
