@@ -12,10 +12,23 @@ DM = Dispersion measure (pc/cc) at which dispersive delay must be calculated
 ref_freq = Reference frequency (GHz) relative to which dispersive delay must be calculated
 '''
 def calc_tDM(freqs_GHz,DM,ref_freq):
-    a_DM = 4.1488064239e-3
+    a_DM = 4.1488064239e-3 # Dispersion constant (Refer to Kulkarni (2020) on ArXiv.)
     freq_factor = freqs_GHz**-2. - ref_freq**-2.
     tDM = a_DM*DM*freq_factor
     return tDM
+##########################################################################
+# Calculate DM uncertainty owing to intra-sample dispersive smearing across a broad bandwidth.
+'''
+Inputs:
+low_freq = Lowest radio frequency (GHz) of observing band
+high_freq = Highest radio frequency (GHz) of observing band
+t_samp = Sampling time (s)
+'''
+def calc_DMuncertainty(low_freq, high_freq, t_samp):
+    a_DM = 4.1488064239e-3 # (Refer to Kulkarni (2020) on ArXiv.)
+    freq_factor = low_freq**-2. - high_freq**-2.
+    delta_DM = t_samp/(a_DM*freq_factor)
+    return delta_DM
 ##########################################################################
 # Brute-force dedisperse a dynamic spectrum at a given DM.
 '''
@@ -74,7 +87,7 @@ def calc_DM_at_maxSNR(ds,freqs_GHz,trial_DMs,ref_freq,freq_low,t_resol,start_tim
         if t_interval is None:
             signal = np.max(dedisp_timeseries) # Signal
         else:
-            signal = np.max(dedisp_timeseries[np.where(np.abs(dedisp_times-t_center)<=t_interval)[0]])    
+            signal = np.max(dedisp_timeseries[np.where(np.abs(dedisp_times-t_center)<=t_interval)[0]])
         offpulse_std = sigma_clip(dedisp_timeseries,sigma=5.0,maxiters=1,cenfunc='median', stdfunc='std').std() # Off-pulse standard deviation
         signal_array[i] = signal
         offpulse_std_array[i] = offpulse_std
