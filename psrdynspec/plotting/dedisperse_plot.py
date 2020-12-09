@@ -108,12 +108,13 @@ basename = Basename (string) for output plot (including path)
 show_plot = Do you want to view the plot live? (True/False) (d: False)
 vmin = Min. color bar axis value for flux density (d: np.nanmin(whole_ds))
 vmax = Max color bar axis value for flux density (d: np.nanmax(whole_ds))
+cmap = Matplotlib color map for imshow plot of dynamic spectrum (d: 'viridis')
 log_colorbar = Do you want a log-spaced colorbar? (True/False) (d: False)
 flux_unit = Unit of flux density (d: arb. units)
 freq_unit = Unit of radio frequency (d: GHz)
 time_unit = Unit of time (d: s)
 '''
-def plot_dedisp_ds_SNRvsDM(whole_ds,times,freqs_array,dedisp_ds,dedisp_timeseries,dedisp_times,trial_DMs,SNR,optimal_DM,t_cand,offpulse_std_value=1.0,SN_smooth=None,basename='',show_plot=False,vmin=None,vmax=None,log_colorbar=False,flux_unit='arb. units',freq_unit='GHz',time_unit='s'):
+def plot_dedisp_ds_SNRvsDM(whole_ds,times,freqs_array,dedisp_ds,dedisp_timeseries,dedisp_times,trial_DMs,SNR,optimal_DM,t_cand,offpulse_std_value=1.0,SN_smooth=None,basename='',show_plot=False,vmin=None,vmax=None,cmap='viridis',log_colorbar=False,flux_unit='arb. units',freq_unit='GHz',time_unit='s'):
     # Specify plot name.
     low_freq_limit = np.min(freqs_array)
     high_freq_limit = np.max(freqs_array)
@@ -170,9 +171,9 @@ def plot_dedisp_ds_SNRvsDM(whole_ds,times,freqs_array,dedisp_ds,dedisp_timeserie
     print('Plotting dedispersed dynamic spectrum')
     ds_ext = [dedisp_times[0],dedisp_times[-1],freqs_array[0],freqs_array[-1]]
     if (log_colorbar==False):
-        ax3.imshow(dedisp_ds,origin='lower',interpolation='nearest',aspect='auto',extent=ds_ext,vmin=vmin,vmax=vmax)
+        ax3.imshow(dedisp_ds,origin='lower',interpolation='nearest',aspect='auto',extent=ds_ext,vmin=vmin,vmax=vmax,cmap=cmap)
     else:
-        ax3.imshow(dedisp_ds,origin='lower',interpolation='nearest',aspect='auto',extent=ds_ext,norm=LogNorm(vmin=vmin,vmax=vmax))
+        ax3.imshow(dedisp_ds,origin='lower',interpolation='nearest',aspect='auto',extent=ds_ext,norm=LogNorm(vmin=vmin,vmax=vmax),cmap=cmap)
     ax3.set_ylabel('Radio frequency (%s)'% (freq_unit),fontsize=16)
     ax3.set_xlabel('Time (%s) referenced to %.2f %s'% (time_unit, freqs_array[-1], freq_unit))
     ax3.set_xlim(dedisp_times[0],dedisp_times[-1])
@@ -182,9 +183,9 @@ def plot_dedisp_ds_SNRvsDM(whole_ds,times,freqs_array,dedisp_ds,dedisp_timeserie
     ax4 = plt.subplot(gs3[0],sharex=ax2)
     print('Plotting non-dedispersed dynamic spectrum')
     if (log_colorbar==False):
-        im = ax4.imshow(whole_ds,origin='lower',interpolation='nearest',aspect='auto',extent=ds_ext,vmin=vmin,vmax=vmax)
+        im = ax4.imshow(whole_ds,origin='lower',interpolation='nearest',aspect='auto',extent=ds_ext,vmin=vmin,vmax=vmax,cmap=cmap)
     else:
-        im = ax4.imshow(whole_ds,origin='lower',interpolation='nearest',aspect='auto',extent=ds_ext,norm=LogNorm(vmin=vmin,vmax=vmax))
+        im = ax4.imshow(whole_ds,origin='lower',interpolation='nearest',aspect='auto',extent=ds_ext,norm=LogNorm(vmin=vmin,vmax=vmax),cmap=cmap)
     ax4.set_ylabel('Radio frequency (%s)'% (freq_unit),fontsize=16)
     ax4.set_xlabel('Time (%s)' % (time_unit),fontsize=16)
     ax4.set_xlim(times[0],times[-1])
