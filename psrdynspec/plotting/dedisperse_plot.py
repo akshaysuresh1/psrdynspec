@@ -180,7 +180,7 @@ def plot_dedisp_ds_SNRvsDM(whole_ds,times,freqs_array,dedisp_ds,dedisp_timeserie
     else:
         ax3.imshow(dedisp_ds,origin='lower',interpolation='nearest',aspect='auto',extent=ds_ext,norm=LogNorm(vmin=vmin,vmax=vmax),cmap=cmap)
     ax3.set_ylabel('Radio frequency (%s)'% (freq_unit),fontsize=16)
-    ax3.set_xlabel('Time (%s) referenced to %.2f %s'% (time_unit, freqs_array[-1], freq_unit))
+    ax3.set_xlabel('Time (%s) referenced to %.2f %s'% (time_unit, freqs_array[-1], freq_unit), fontsize=16)
     ax3.set_xlim(dedisp_times[0],dedisp_times[-1])
 
     # Plot non-dedispersed dynamic spectrum in lower panel of bottom gridspec.
