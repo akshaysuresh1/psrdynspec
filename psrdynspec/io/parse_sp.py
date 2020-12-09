@@ -15,7 +15,8 @@ def read_singlepulse(file_name):
     sigma = np.array(df['Sigma'],dtype='float64') # Significance of single pulse candidate detections
     times = np.array(df['Time'],dtype='float64') # Times at which single pulse candidates are found in the dedispersed time series
     samples = np.array(df['Sample'],dtype='int') # Sample numbers of candidates in dedispersed time series
-    return DMs,sigma,times,samples
+    downfact = np.array(df['Downfact'],dtype='int') # Smoothing factor to be applied on dedispersed time series for candidate detection
+    return DMs, sigma, times, samples, downfact
 #########################################################################
 # Apply a S/N cutoff to extracted candidates.
 '''
@@ -23,16 +24,18 @@ Inputs:
 DMs = Candidate DM (pc/cc)
 sigma = Detection significance of candidate
 times = Candidate times (s) in dedispersed time series
-samples = Sample number of candidate in dedispersed time series.
+samples = Sample number of candidate in dedispersed time series
+downfact = Smoothing factor to be applied on dedispersed time series for candidate detection
 sigma_min = S/N threshold
 '''
-def apply_sigma_cutoff(DMs,sigma,times,samples,sigma_min):
+def apply_sigma_cutoff(DMs,sigma,times,samples,downfact,sigma_min):
     indices = np.where(sigma>=sigma_min)[0]
     sigma_select = sigma[indices]
     DMs_select = DMs[indices]
     times_select = times[indices]
     samples_select = samples[indices]
-    return DMs_select,sigma_select,times_select,samples_select
+    downfact_select = downfact[indices]
+    return DMs_select,sigma_select,times_select,samples_select,downfact_select
 #########################################################################
 # Remove duplicates from extracted candidate list.
 '''
@@ -48,13 +51,14 @@ Returns:
 cand_DMs, cand_sigma, cand_dedisp_times, cand_dedisp_samples: Input arrays re-arranged in order of increasing time
 select_indices = Indices of candidates selected for retention in output arrays. Indices correspond to those in output arrays sorted in ascending order of time.
 '''
-def remove_duplicates(cand_DMs,cand_sigma,cand_dedisp_times,cand_dedisp_samples,time_margin,DM_margin):
+def remove_duplicates(cand_DMs,cand_sigma,cand_dedisp_times,cand_dedisp_samples,cand_downfact,time_margin,DM_margin):
     # Sort the extracted candidate list in order of increasing times.
     sort_index = np.argsort(cand_dedisp_times)
     cand_dedisp_times = cand_dedisp_times[sort_index]
     cand_dedisp_samples = cand_dedisp_samples[sort_index]
     cand_DMs = cand_DMs[sort_index]
     cand_sigma = cand_sigma[sort_index]
+    cand_downfact = cand_downfact[sort_index]
     # Initialize empty arrays.
     check_indices = np.array([],dtype=int)
     select_indices = np.array([],dtype=int)
@@ -69,7 +73,7 @@ def remove_duplicates(cand_DMs,cand_sigma,cand_dedisp_times,cand_dedisp_samples,
                 check_indices = np.append(check_indices, indices)
         i+=1
     print('Duplicate candidates removed.')
-    return cand_DMs, cand_sigma, cand_dedisp_times, cand_dedisp_samples, select_indices
+    return cand_DMs, cand_sigma, cand_dedisp_times, cand_dedisp_samples, cand_downfact, select_indices
 #########################################################################
 # Compile list of single pulse candidates over a specified DM range. Info from .singlepulse files is used.
 '''
@@ -90,14 +94,16 @@ def gen_singlepulse(low_DM,high_DM, file_list):
     cand_sigma = np.array([]) # Significance of candidate detection.
     cand_dedisp_times = np.array([]) # Time (s) at which candidate is seen in the dedispersed time series
     cand_dedisp_samples = np.array([]) # Sample number of candidate in dedispersed time series
+    cand_downfact = np.array([]) # Smoothing factor to be applied on dedispersed time series for candidate detection
 
     # Generate full list of single pulse candidates from selected .singlepulse files
     for file_name in select_files:
-        DMs,sigma,times,samples = read_singlepulse(file_name)
+        DMs,sigma,times,samples,downfact = read_singlepulse(file_name)
         cand_DMs = np.append(cand_DMs,DMs)
         cand_sigma = np.append(cand_sigma,sigma)
         cand_dedisp_times = np.append(cand_dedisp_times,times)
         cand_dedisp_samples = np.append(cand_dedisp_samples,samples)
+        cand_downfact = np.append(cand_downfact,downfact)
     print('Collation complete.')
-    return cand_DMs,cand_sigma,cand_dedisp_times,cand_dedisp_samples
+    return cand_DMs,cand_sigma,cand_dedisp_times,cand_dedisp_samples,cand_downfact
 #########################################################################
