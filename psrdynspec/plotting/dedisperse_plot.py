@@ -146,7 +146,7 @@ def plot_dedisp_ds_SNRvsDM(whole_ds,times,freqs_array,dedisp_ds,dedisp_timeserie
         mask_chans = []
 
     # Construct the gridspec framework for figure.
-    fig = plt.figure(figsize=(8,14))
+    fig = plt.figure(figsize=(8,12))
     #make outer gridspec
     outer = gridspec.GridSpec(3, 1, figure=fig,height_ratios = [1, 3, 2])
 
@@ -174,11 +174,11 @@ def plot_dedisp_ds_SNRvsDM(whole_ds,times,freqs_array,dedisp_ds,dedisp_timeserie
     ax2.set_ylabel('(S/N)$_{\mathrm{ts}}$',fontsize=16)
     # Plot the dedispersed dynamic spectrum in middle panel of bottom gridspec.
     print('Plotting dedispersed dynamic spectrum')
-    ds_ext = [dedisp_times[0],dedisp_times[-1],freqs_array[0],freqs_array[-1]]
+    dedisp_ds_ext = [dedisp_times[0],dedisp_times[-1],freqs_array[0],freqs_array[-1]]
     if (log_colorbar==False):
-        ax3.imshow(dedisp_ds,origin='lower',interpolation='nearest',aspect='auto',extent=ds_ext,vmin=vmin,vmax=vmax,cmap=cmap)
+        ax3.imshow(dedisp_ds,origin='lower',interpolation='nearest',aspect='auto',extent=dedisp_ds_ext,vmin=vmin,vmax=vmax,cmap=cmap)
     else:
-        ax3.imshow(dedisp_ds,origin='lower',interpolation='nearest',aspect='auto',extent=ds_ext,norm=LogNorm(vmin=vmin,vmax=vmax),cmap=cmap)
+        ax3.imshow(dedisp_ds,origin='lower',interpolation='nearest',aspect='auto',extent=dedisp_ds_ext,norm=LogNorm(vmin=vmin,vmax=vmax),cmap=cmap)
     ax3.set_ylabel('Radio frequency (%s)'% (freq_unit),fontsize=16)
     ax3.set_xlabel('Time (%s) referenced to %.2f %s'% (time_unit, freqs_array[-1], freq_unit), fontsize=16)
     ax3.set_xlim(dedisp_times[0],dedisp_times[-1])
@@ -187,6 +187,7 @@ def plot_dedisp_ds_SNRvsDM(whole_ds,times,freqs_array,dedisp_ds,dedisp_timeserie
     gs3 = gridspec.GridSpecFromSubplotSpec(1, 1, subplot_spec = outer[2])
     ax4 = plt.subplot(gs3[0])
     print('Plotting non-dedispersed dynamic spectrum')
+    ds_ext = [times[0],times[-1],freqs_array[0],freqs_array[-1]]
     if (log_colorbar==False):
         im = ax4.imshow(whole_ds,origin='lower',interpolation='nearest',aspect='auto',extent=ds_ext,vmin=vmin,vmax=vmax,cmap=cmap)
     else:
