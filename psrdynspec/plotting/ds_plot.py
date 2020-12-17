@@ -53,7 +53,7 @@ def plot_ds(ds,t_start,t_stop,freq_low,freq_high,time_unit,freq_unit,flux_unit,b
     else:
         plt.imshow(ds,interpolation='nearest',origin='lower',aspect='auto',extent=[t_start,t_stop,freq_low,freq_high],cmap=cmap,norm=LogNorm(vmin=vmin,vmax=vmax))
     for chan in mask_chans:
-        plt.axhline(y=freqs_GHz[chan],xmin=0., xmax=0.03, linestyle='-', color='salmon')    
+        plt.axhline(y=freqs_GHz[chan],xmin=0., xmax=0.03, linestyle='-', color='salmon')
     h = plt.colorbar()
     h.set_label('Flux density ('+flux_unit+')',fontsize=14)
     plt.xlabel('Time ('+time_unit+')',fontsize=14)
