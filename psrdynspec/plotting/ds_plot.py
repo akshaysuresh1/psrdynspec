@@ -20,7 +20,7 @@ cmap = Matplotlib color map (default = 'viridis')
 mask_chans = List of channels to indicate as flagged channels (default = None)
 '''
 def plot_ds(ds,times,freqs_GHz,basename,show_plot=False,time_unit='s',freq_unit='GHz',flux_unit='arbitrary units',vmin=None,vmax=None,log_colorbar=False,cmap='viridis',mask_chans=None):
-    plot_name = basename+'_t'+'%.3fto%.3f'% (t_start,t_stop)+'_freqs%.2fto%.2f'% (freq_low,freq_high)+'.png'
+    plot_name = basename+'_t'+'%.2fto%.2f'% (times[0],times[-1])+'_freqs%.2fto%.2f'% (freqs_GHz[0],freqs_GHz[-1])+'.png'
     if (vmin is None):
         vmin = np.nanmin(ds)
     elif isinstance(vmin, str):
