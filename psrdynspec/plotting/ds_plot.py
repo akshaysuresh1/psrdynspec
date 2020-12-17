@@ -6,22 +6,20 @@ from matplotlib.colors import LogNorm
 # Plot a dynamic spectrum using imshow.
 '''
 ds = Dynamic spectrum to plot, 2D array, axes = [Frequency, Time]
-t_start = Start time of DS
-t_stop = Stop time of DS
-freq_low = Frequency at lower edge of DS bandwidth
-freq_high = Frequency at upper edge of DS bandwidth
-time_unit = String: Unit of time axis (s, ms, etc.)
-freq_unit = String: Unit of radio frequency (GHz, MHz, kHz, etc.)
-flux_unit = String: Unit of flux density measurement
+times = 1D array of times (s) covered in dynamic spectrum
+freqs_GHz = 1D array of radio frequencies (GHz) covered in dynamic spectrum
 basename = Basename of output plot (including path)
 show_plot = Do you want to show the plot live? (True/False) (default = False)
+time_unit = String: Unit of time axis (s, ms, etc.)  (default = 's')
+freq_unit = String: Unit of radio frequency (GHz, MHz, kHz, etc.) (default = 'GHz')
+flux_unit = String: Unit of flux density measurement (default = 'arbitrary units')
 vmin = Min. color bar axis value for flux density (default = np.nanmin(ds))
 vmax = Max color bar axis value for flux density (default = np.nanmax(ds))
 log_colorbar = Do you want a log-spaced colorbar? (True/False) (default = False)
 cmap = Matplotlib color map (default = 'viridis')
 mask_chans = List of channels to indicate as flagged channels (default = None)
 '''
-def plot_ds(ds,t_start,t_stop,freq_low,freq_high,time_unit,freq_unit,flux_unit,basename,show_plot=False,vmin=None,vmax=None,log_colorbar=False,cmap='viridis',mask_chans=None):
+def plot_ds(ds,times,freqs_GHz,basename,show_plot=False,time_unit='s',freq_unit='GHz',flux_unit='arbitrary units',vmin=None,vmax=None,log_colorbar=False,cmap='viridis',mask_chans=None):
     plot_name = basename+'_t'+'%.3fto%.3f'% (t_start,t_stop)+'_freqs%.2fto%.2f'% (freq_low,freq_high)+'.png'
     if (vmin is None):
         vmin = np.nanmin(ds)
@@ -48,10 +46,11 @@ def plot_ds(ds,t_start,t_stop,freq_low,freq_high,time_unit,freq_unit,flux_unit,b
         mask_chans = []
 
     print('Plotting dynamic spectrum...')
+    ds_ext = [times[0], times[-1], freqs_GHz[0], freqs_GHz[-1]]
     if (log_colorbar==False):
-        plt.imshow(ds,interpolation='nearest',origin='lower',aspect='auto',extent=[t_start,t_stop,freq_low,freq_high],cmap=cmap,vmin=vmin,vmax=vmax)
+        plt.imshow(ds,interpolation='nearest',origin='lower',aspect='auto',extent=ds_ext,cmap=cmap,vmin=vmin,vmax=vmax)
     else:
-        plt.imshow(ds,interpolation='nearest',origin='lower',aspect='auto',extent=[t_start,t_stop,freq_low,freq_high],cmap=cmap,norm=LogNorm(vmin=vmin,vmax=vmax))
+        plt.imshow(ds,interpolation='nearest',origin='lower',aspect='auto',extent=ds_ext,cmap=cmap,norm=LogNorm(vmin=vmin,vmax=vmax))
     for chan in mask_chans:
         plt.axhline(y=freqs_GHz[chan],xmin=0., xmax=0.03, linestyle='-', color='salmon')
     h = plt.colorbar()
