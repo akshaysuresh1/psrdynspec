@@ -12,8 +12,9 @@ timeseries = 1D time series to fold
 times = 1D array of times (s)
 pfold = Folding period (s)
 Nbins = No. of phase bins
+return_counts = Return no. of counts per phase bin? (True/False)
 '''
-def fold_ts(timeseries, times, pfold, Nbins):
+def fold_ts(timeseries, times, pfold, Nbins, return_counts=False):
     phi = times/pfold % 1.0
     phibin_edges = np.linspace(0.,1.,Nbins+1) # Edges of phase bins
     phibin_centers = 0.5*(phibin_edges[1:]+phibin_edges[:-1]) # Centers of phase bins
@@ -27,7 +28,10 @@ def fold_ts(timeseries, times, pfold, Nbins):
         profile[n-1] = np.sum(timeseries[np.where(indbin_edges==n)]) # Sum up time series flux values that fall in one phase bin.
         counts[n-1] = np.size(np.where(indbin_edges==n)) # No. of counts in bin.
     profile /= counts # Divide by the number of counts to generate an average profile.
-    return profile, phibin_centers
+    if return_counts:
+        return profile, phibin_centers, counts
+    else:
+        return profile, phibin_centers
 ##########################################################################
 # Convert a long time series into number of rotations and phase bins based on a given rotation period.
 '''
