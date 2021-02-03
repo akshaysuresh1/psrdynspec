@@ -285,7 +285,11 @@ def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma
     for chan in mask_chans:
         ax20.axhline(y=freqs_GHz[chan],xmin=0., xmax=0.03, linestyle='-', color='salmon')
     guide_DMcurve = 0.5*(dedisp_times[0] + cand_dedisp_times[cand_index]) + calc_tDM(freqs_GHz, cand_DMs[cand_index], freqs_GHz[-1])
-    ax20.plot(guide_DMcurve,freqs_GHz, linestyle='-', color='white')
+    if cmap='Greys':
+        linecol = 'red'
+    else:
+        linecol = 'white'
+    ax20.plot(guide_DMcurve,freqs_GHz, linestyle='-', color=linecol)
     ax20.set_xlabel('Time (s)', fontsize=14)
     ax20.set_ylabel('Radio frequency (GHz)', fontsize=14)
     # Plot dedispersed dynamic spectrum and dedispersed time series in bottom right panel.
