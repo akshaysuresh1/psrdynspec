@@ -176,8 +176,10 @@ mask_chans = List or 1D array of channel numbers to indicate as masked channels 
 vmin = Min. color bar axis value for flux density (default = np.nanmin(whole_ds))
 vmax = Max color bar axis value for flux density (default = np.nanmax(whole_ds))
 cmap = Matplotlib color map for dynamic spectrum plotting (d: 'viridis')
+do_smooth_dedisp = Has the dedispersed dynamic spectrum been smoothed by an optimal matched filter? (True/False) (default = False)
+filter_width = No. of time bins spanning filter (integer) (default = 1)
 '''
-def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma, metadata, ds, times, freqs_GHz, dedisp_ds, dedisp_timeseries, dedisp_times, SAVE_DIR='', output_formats=['.png'], show_plot=False, low_DM_cand=None, high_DM_cand=None, mask_chans=None, vmin=None, vmax=None, cmap='viridis'):
+def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma, metadata, ds, times, freqs_GHz, dedisp_ds, dedisp_timeseries, dedisp_times, SAVE_DIR='', output_formats=['.png'], show_plot=False, low_DM_cand=None, high_DM_cand=None, mask_chans=None, vmin=None, vmax=None, cmap='viridis', do_smooth_dedisp=False, filter_width=1):
     # Set low DM limit for plot.
     if low_DM_cand is None:
         low_DM_cand = np.min(cand_DMs)
@@ -292,6 +294,8 @@ def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma
     ax210 = plt.subplot(gs21[0])
     dedisp_SNR = dedisp_timeseries/sigma_clip(dedisp_timeseries, sigma=5, cenfunc='median', stdfunc='std', maxiters=1).std()
     ax210.plot(dedisp_times, dedisp_SNR, linestyle='-')
+    if do_smooth_dedisp:
+        ax210.annotate('W$_{\mathrm{f}}$ = %d bins'% (filter_width), xy=(0.03, 0.8), xycoords='axes fraction', fontsize=14)
     ax210.annotate('DM = %.1f pc cm$^{-3}$'% (cand_DMs[cand_index]),xy=(0.63,0.8),xycoords='axes fraction',fontsize=14)
     ax210.set_ylabel('(S/N)$_{\mathrm{ts}}$', fontsize=14)
     # Dedispersed dynamic spectrum
