@@ -21,6 +21,9 @@ mask_chans = List of channels to indicate as flagged channels (default = None)
 '''
 def plot_ds(ds,times,freqs_GHz,basename,show_plot=False,time_unit='s',freq_unit='GHz',flux_unit='arbitrary units',vmin=None,vmax=None,log_colorbar=False,cmap='viridis',mask_chans=None):
     plot_name = basename+'_t'+'%.2fto%.2f'% (times[0],times[-1])+'_freqs%.2fto%.2f'% (freqs_GHz[0],freqs_GHz[-1])+'.png'
+
+    freq_resol = freqs_GHz[1] - freqs_GHz[0] # Frequency resolution
+
     if (vmin is None):
         vmin = np.nanmin(ds)
     elif isinstance(vmin, str):
@@ -51,8 +54,10 @@ def plot_ds(ds,times,freqs_GHz,basename,show_plot=False,time_unit='s',freq_unit=
         plt.imshow(ds,interpolation='nearest',origin='lower',aspect='auto',extent=ds_ext,cmap=cmap,vmin=vmin,vmax=vmax)
     else:
         plt.imshow(ds,interpolation='nearest',origin='lower',aspect='auto',extent=ds_ext,cmap=cmap,norm=LogNorm(vmin=vmin,vmax=vmax))
+    # Indicate masked channels.
+    mask_len = int(np.round(0.06*len(times)))
     for chan in mask_chans:
-        plt.axhline(y=freqs_GHz[chan],xmin=0., xmax=0.03, linestyle='-', color='salmon')
+        plt.fill_between(times[:mask_len], freqs_GHz[chan]-0.5*freq_resol, freqs_GHz[chan]+0.5*freq_resol,color='salmon')
     h = plt.colorbar()
     h.set_label('Flux density ('+flux_unit+')',fontsize=14)
     plt.xlabel('Time ('+time_unit+')',fontsize=14)
