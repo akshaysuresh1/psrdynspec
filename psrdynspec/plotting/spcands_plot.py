@@ -180,6 +180,7 @@ do_smooth_dedisp = Has the dedispersed dynamic spectrum been smoothed by an opti
 filter_width = No. of time bins spanning filter (integer) (default = 1)
 '''
 def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma, metadata, ds, times, freqs_GHz, dedisp_ds, dedisp_timeseries, dedisp_times, SAVE_DIR='', output_formats=['.png'], show_plot=False, low_DM_cand=None, high_DM_cand=None, mask_chans=None, vmin=None, vmax=None, cmap='viridis', do_smooth_dedisp=False, filter_width=1):
+    freq_resol = freqs_GHz[1] - freqs_GHz[0] # Frequency resolution
     # Set low DM limit for plot.
     if low_DM_cand is None:
         low_DM_cand = np.min(cand_DMs)
@@ -282,8 +283,10 @@ def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma
     # Plot non-dedispersed dynamic spectrum in top right panel.
     ax20 = fig.add_subplot(right_gridspec[0])
     ax20.imshow(ds, aspect='auto', interpolation='nearest', origin='lower', extent=[times[0], times[-1], freqs_GHz[0], freqs_GHz[-1]], vmin=vmin, vmax=vmax, cmap=cmap)
+    # Indicate masked channels.
+    mask_len = int(np.round(0.06*len(times)))
     for chan in mask_chans:
-        ax20.axhline(y=freqs_GHz[chan],xmin=0., xmax=0.03, linestyle='-', color='salmon')
+        plt.fill_between(times[:mask_len], freqs_GHz[chan]-0.5*freq_resol, freqs_GHz[chan]+0.5*freq_resol,color='salmon')
     guide_DMcurve = 0.5*(dedisp_times[0] + cand_dedisp_times[cand_index]) + calc_tDM(freqs_GHz, cand_DMs[cand_index], freqs_GHz[-1])
     if cmap=='Greys':
         linecol = 'red'
