@@ -305,11 +305,14 @@ def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma
         ax210.annotate('W$_{\mathrm{f}}$ = %d bins'% (filter_width), xy=(0.03, 0.8), xycoords='axes fraction', fontsize=14)
     ax210.annotate('DM = %.1f pc cm$^{-3}$'% (cand_DMs[cand_index]),xy=(0.63,0.8),xycoords='axes fraction',fontsize=14)
     ax210.set_ylabel('(S/N)$_{\mathrm{ts}}$', fontsize=14)
+    ax210.get_xaxis().set_visible(False)
     # Dedispersed dynamic spectrum
     ax211 = plt.subplot(gs21[1],sharex=ax210)
     ax211.imshow(dedisp_ds, aspect='auto', interpolation='nearest', origin='lower', extent=[dedisp_times[0], dedisp_times[-1], freqs_GHz[0], freqs_GHz[-1]], vmin=vmin, vmax=vmax, cmap=cmap)
+    # Indicate masked channels.
+    mask_len = int(np.round(0.06*len(dedisp_times)))
     for chan in mask_chans:
-        ax211.axhline(y=freqs_GHz[chan],xmin=0., xmax=0.03, linestyle='-', color='salmon')
+        ax211.fill_between(dedisp_times[:mask_len], freqs_GHz[chan]-0.5*freq_resol, freqs_GHz[chan]+0.5*freq_resol,color='salmon')
     ax211.set_xlabel('Time (s) referenced to %.2f GHz'% (freqs_GHz[-1]), fontsize=14)
     ax211.set_ylabel('Radio frequency (GHz)', fontsize=14)
 
