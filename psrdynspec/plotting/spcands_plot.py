@@ -74,12 +74,16 @@ high_time_plot = High time limit (s) for plotting (d: np.max(cand_dedisp_times))
 select_indices = Indices of candidates (in cand_dedisp_times array) to indicate with a 'x' symbol in the DM-time plane
 '''
 def plot_DMtime(cand_dedisp_times, cand_DMs, cand_sigma, metadata, SAVE_DIR='', output_formats=['.png'], show_plot=False, low_DM_cand=None, high_DM_cand=None, low_time_plot=None, high_time_plot=None, select_indices=None):
+    # Set low DM limit for plot.
     if low_DM_cand is None:
         low_DM_cand = np.min(cand_DMs)
+    # Set high DM limit for plot.
     if high_DM_cand is None:
         high_DM_cand = np.min(cand_DMs)
+    # Set low time limit for plot.
     if low_time_plot is None:
         low_time_plot = 0.0
+    # Set high time limit for plot.
     if high_time_plot is None:
         high_time_plot = np.max(cand_dedisp_times)
     center_freq = metadata.lofreq + 0.5*(metadata.numchan-1)*metadata.chan_width # MHz
@@ -179,6 +183,8 @@ output_formats = List of file extensions for output plot (d: ['.png'])
 show_plot = Do you want to show the plot live? (True/False) (default = False)
 low_DM_cand = Min. DM (pc/cc) limit to plot (d: np.min(cand_DMs))
 high_DM_cand = Max DM (pc/cc) limit to plot (d: np.max(cand_DMs))
+low_time_plot = Low time limit (s) for plotting DM-time plane (d: 0.0)
+high_time_plot = High time limit (s) for plotting DM-time plane (d: np.max(cand_dedisp_times))
 mask_chans = List or 1D array of channel numbers to indicate as masked channels in the dynamic spectrum.
 vmin = Min. color bar axis value for flux density (default = np.nanmin(whole_ds))
 vmax = Max color bar axis value for flux density (default = np.nanmax(whole_ds))
@@ -186,7 +192,7 @@ cmap = Matplotlib color map for dynamic spectrum plotting (d: 'viridis')
 do_smooth_dedisp = Has the dedispersed dynamic spectrum been smoothed by an optimal matched filter? (True/False) (default = False)
 filter_width = No. of time bins spanning filter (integer) (default = 1)
 '''
-def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma, metadata, ds, times, freqs_GHz, dedisp_ds, dedisp_timeseries, dedisp_times, SAVE_DIR='', output_formats=['.png'], show_plot=False, low_DM_cand=None, high_DM_cand=None, mask_chans=None, vmin=None, vmax=None, cmap='viridis', do_smooth_dedisp=False, filter_width=1):
+def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma, metadata, ds, times, freqs_GHz, dedisp_ds, dedisp_timeseries, dedisp_times, SAVE_DIR='', output_formats=['.png'], show_plot=False, low_DM_cand=None, high_DM_cand=None, low_time_plot=None, high_time_plot=None, mask_chans=None, vmin=None, vmax=None, cmap='viridis', do_smooth_dedisp=False, filter_width=1):
     freq_resol = freqs_GHz[1] - freqs_GHz[0] # Frequency resolution
     # Set low DM limit for plot.
     if low_DM_cand is None:
@@ -194,6 +200,12 @@ def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma
     # Set high DM limit for plot.
     if high_DM_cand is None:
         high_DM_cand = np.min(cand_DMs)
+    # Set low time limit for plot.
+    if low_time_plot is None:
+        low_time_plot = 0.0
+    # Set high time limit for plot.
+    if high_time_plot is None:
+        high_time_plot = np.max(cand_dedisp_times)
     # Set channels to mask in dynamic spectrum.
     if mask_chans is None:
         mask_chans = []
@@ -235,6 +247,7 @@ def spcand_verification_plot(cand_index, cand_dedisp_times, cand_DMs, cand_sigma
     ax1 = plt.subplot(gs1[0])
     ax1.scatter(x=cand_dedisp_times,y=cand_DMs,s=(cand_sigma**2.)/5,marker='o',facecolor='None',edgecolor='k')
     ax1.plot(cand_dedisp_times[cand_index],cand_DMs[cand_index],marker='x',markersize=8,color='red',linestyle='None')
+    ax1.set_xlim((low_time_plot, high_time_plot))
     ax1.set_ylim((low_DM_cand, high_DM_cand))
     ax1.set_xlabel('Time (s)',fontsize=14)
     ax1.set_ylabel('DM (pc cm$^{-3}$)',fontsize=14)
