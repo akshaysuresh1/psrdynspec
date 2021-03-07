@@ -101,7 +101,7 @@ def plot_DMtime(cand_dedisp_times, cand_DMs, cand_sigma, metadata, SAVE_DIR='', 
     ax1.scatter(x=cand_dedisp_times,y=cand_DMs,s=(cand_sigma**2.)/5,marker='o',facecolor='None',edgecolor='k')
     if select_indices is not None:
         ax1.plot(cand_dedisp_times[select_indices],cand_DMs[select_indices],marker='x',markersize=8,color='red',linestyle='None')
-    ax1.set_xlim(low_time_plot, high_time_plot)
+    ax1.set_xlim((low_time_plot, high_time_plot))
     ax1.set_ylim((low_DM_cand, high_DM_cand))
     ax1.set_xlabel('Time (s)',fontsize=14)
     ax1.set_ylabel('DM (pc cm$^{-3}$)',fontsize=14)
