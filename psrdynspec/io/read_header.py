@@ -33,7 +33,7 @@ class Header(object):
 
         if (file_type=='psrfits'):
             for i in range(N_files):
-                hdulist = fits.open(file_list[i])
+                hdulist = fits.open(file_list[i], ignore_missing_end=True)
                 subint = hdulist['SUBINT'].header
                 self.ntsamples += subint['NSBLK']*subint['NAXIS2'] # No. of time samples in a file
                 if (i==0):

@@ -18,7 +18,7 @@ def load_psrfits_data(file_list,pol=[0]):
     for i in range(len(file_list)):
         file_name = file_list[i].split('/')[-1]
         print('Reading in data from %s'% (file_name))
-        data_file = fits.open(file_list[i])[-1].data['DATA'][:,:,:,:,0]
+        data_file = fits.open(file_list[i], ignore_missing_end=True)[-1].data['DATA'][:,:,:,:,0]
         # Data shape = (Nrows, NSBLK, NPOL, NCHANS)
         data_file = data_file.reshape((data_file.shape[0]*data_file.shape[1],data_file.shape[2],data_file.shape[3]))
         # Data shape = (Ntsamples, NPOL, NCHANS)
@@ -73,7 +73,7 @@ def extract_psrfits_datachunk(glob_psrfits, start_time, stop_time, pol=[0]):
         if '/' in file_name:
             file_name = file_name.split('/')[-1]
         print('Reading in data from %s'% (file_name))
-        data_file = fits.open(file_list[idx_file])[-1].data['DATA'][:,:,:,:,0]
+        data_file = fits.open(file_list[idx_file], ignore_missing_end=True)[-1].data['DATA'][:,:,:,:,0]
         # Data shape = (Nrows, NSBLK, NPOL, NCHANS)
         data_file = data_file.reshape((data_file.shape[0]*data_file.shape[1],data_file.shape[2],data_file.shape[3]))
         # Data shape = (Ntsamples, NPOL, NCHANS)
