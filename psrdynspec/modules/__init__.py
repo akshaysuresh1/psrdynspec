@@ -4,4 +4,5 @@ from .fft import fft1d_blocks_avg, fft1d_mask
 from .filters1d import savgol_lowpass, pass_1dfilter, blockavg1d
 from .filters2d import smooth_master, gen_general_2DGaussian, smooth_2DGaussian, blockavg_ds
 from .fold import fold_ts, fold_rotations_ts, fold_metric_periods
+from .running_median import fast_running_median
 from .subbands import construct_ds_from_subbands
