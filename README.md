@@ -21,6 +21,11 @@ python setup.py clean
 
 Modules defined in ```psrdynspec``` can now be imported into Python from any location on your system.
 
+To uninstall ```psrdynspec```, simply run the following command line call.
+```
+pip uninstall psrdynspec
+```
+
 ## Troubleshooting
 Please submit an issue to voice any problems or requests.
 
