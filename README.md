@@ -2,7 +2,7 @@
 Python 3 tools for processing dynamic spectra of radio transients
 
 ## Dependencies
-```psrdynspec``` is written in Python 3, tested on Python 3.7.4 and has the following package dependencies.
+```psrdynspec``` is written in Python 3, and has the following package dependencies.
 - astropy > 4.0
 - blimpy = 2.0.0
 - matplotlib > 3.0
@@ -11,11 +11,15 @@ Python 3 tools for processing dynamic spectra of radio transients
 - pandas
 
 ## Installation
-1. Clone this repository to your local machine.
-2. At a terminal on your local machine, change directory (cd) into ```psrdynspec```. 
-3. Run the command ```python setup.py install``` on the terminal.
+At the command line, run the following steps.
+'''
+git clone git@github.com:akshaysuresh1/psrdynspec.git
+cd psrdynspec
+python setup.py install
+python setup.py clean
+'''
 
-Modules defined in ```psrdynspec``` can now be imported into Python run from any location on your system.
+Modules defined in ```psrdynspec``` can now be imported into Python from any location on your system.
 
 ## Troubleshooting
 Please submit an issue to voice any problems or requests.
