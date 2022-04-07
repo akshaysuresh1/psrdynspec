@@ -28,11 +28,9 @@ else:
         print("Enabling non-interactive plotting. Setting matplotlib backend to %s."% (noninteractive_backend))
         mpl.use(noninteractive_backend)
 
-# Enable use of LaTeX labels in plots.
-mpl.rcParams['text.usetex'] = True
-mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
-
 # Import required packages.
 import matplotlib.pyplot as plt
 plt.ioff() # Set interactive off by default.
+# Enable use of LaTeX labels in plots.
+plt.rcParams.update({"text.usetex": True, "text.latex.preamble": r"\usepackage{amsmath}"})
 import numpy as np
